@@ -44,29 +44,31 @@ shinyUI(pageWithSidebar(
                 step= 1,
                 value = 1000),
     
-    sliderInput("pDetectMan", 
-                "3 Detection Human:", 
+    
+    #sliderInput("pDetectMan", 
+    numericInput("pDetectMan", 
+                "3 Detection probability Human:", 
                 min = 0,
                 max = 1,
                 step = 0.001,
                 value = 0.001),   
     
-    sliderInput("pDetectOxe", 
-                "4 Detection Other host:", 
+    numericInput("pDetectOxe", 
+                "4 Detection probability Other host:", 
                 min = 0,
                 max = 1, 
                 step = 0.001,
                 value = 0.005),
 
-    sliderInput("pFeedMan", 
-                "5 Feeding Human:", 
+    numericInput("pFeedMan", 
+                "5 Feeding probability Human:", 
                 min = 0,
                 max = 1,
                 step = 0.01,
                 value = 0.1),   
     
-    sliderInput("pFeedOxe", 
-                "6 Feeding Other host:", 
+    numericInput("pFeedOxe", 
+                "6 Feeding probability Other host:", 
                 min = 0,
                 max = 1,
                 step = 0.01,
@@ -103,6 +105,7 @@ shinyUI(pageWithSidebar(
     tabsetPanel(
 
       tabPanel("Feeding graph", plotOutput("plotFeedingOneCycle")),
+      tabPanel("Proportion human feeders", plotOutput("plotFeedingOneCycleProp")),
       tabPanel("Numeric results", tableOutput("showResultsNumeric")),
       tabPanel("About", includeMarkdown("about.md"))
       

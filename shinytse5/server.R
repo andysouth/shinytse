@@ -70,10 +70,18 @@ output$plotFeedingOneCycle <- renderPlot({
   rtPlotFeedingOneCycle(v$output)
 })  
 
-
+###############################
+# plotting feeding outputs as proportion flies feeding on humans
+output$plotFeedingOneCycleProp <- renderPlot({
+  
+  #needed to get plot to react when button is pressed
+  runModel()
+    
+  rtPlotFeedingOneCycle(v$output, proportionPlot=TRUE)
+})  
 
 ###############################
-# test plotting of inputs
+# plot table of output results
 output$showResultsNumeric <- renderTable({
   
   runModel()
