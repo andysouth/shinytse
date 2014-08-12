@@ -1,5 +1,8 @@
+#rtsetseMapEditor/ui.r
+#andy south 12/08/2014
+
 library(shiny)
-library(raster)
+library(rmarkdown)
 
 shinyUI(pageWithSidebar(
   
@@ -10,7 +13,15 @@ shinyUI(pageWithSidebar(
   ),
   
   mainPanel(
-    #plotOutput("plotAsc")
-    plotOutput("plotTxtChar")
-  )
+
+    
+    tabsetPanel(
+      
+      tabPanel("map", plotOutput("plotTxtChar")),
+      #tabPanel("plot of a gridascii", plotOutput("plotAsc")),
+      tabPanel("data table", tableOutput("tableTxtChar")),      
+      tabPanel("About", includeMarkdown("about.md"))
+      
+    ) # end tabsetPanel         
+  ) # end mainPanel
 ))

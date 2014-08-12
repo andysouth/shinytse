@@ -1,3 +1,6 @@
+#rtsetseMapEditor/ui.r
+#andy south 12/08/2014
+
 library(shiny)
 library(raster)
 
@@ -35,5 +38,19 @@ shinyServer(function(input, output) {
     plot(mapRaster)    
     
   }) #end of plotTxtChar  
+  
+  ###############################
+  # plot table of output results
+  output$tableTxtChar <- renderTable({
+    
+    inFile <- input$layer
+    
+    if (is.null(inFile)) return(NULL)
+    
+    map <- read.table(inFile$datapath, as.is=TRUE)
+    
+    map
+    
+  }) #end of tableTxtChar      
   
 })
