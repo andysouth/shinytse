@@ -3,6 +3,7 @@
 
 library(shiny)
 library(rmarkdown)
+library(shinyTable) #for editable tables
 
 shinyUI(pageWithSidebar(
   
@@ -19,7 +20,8 @@ shinyUI(pageWithSidebar(
       
       tabPanel("map", plotOutput("plotTxtChar")),
       #tabPanel("plot of a gridascii", plotOutput("plotAsc")),
-      tabPanel("data table", tableOutput("tableTxtChar")),      
+      tabPanel("data table", tableOutput("tableTxtChar")),  
+      tabPanel("editable", htable("tbl", colHeaders="provided")),
       tabPanel("About", includeMarkdown("about.md"))
       
     ) # end tabsetPanel         

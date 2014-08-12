@@ -6,7 +6,10 @@ library(raster)
 
 shinyServer(function(input, output) {
   
-  ### plots a loaded gridAscii file ###
+  cachedEditable <- NULL
+  
+  #####################################
+  ### plot raster from a loaded gridAscii file ###
   output$plotAsc <- renderPlot({
     
     inFile <- input$layer
@@ -18,8 +21,8 @@ shinyServer(function(input, output) {
     plot(rast) 
   }) #end of plotAsc
 
-  
-  ### plots a loaded text matrix of characters ###
+  ################################################
+  ### plot raster from a loaded text matrix of characters ###
   output$plotTxtChar <- renderPlot({
     
     inFile <- input$layer
@@ -52,5 +55,21 @@ shinyServer(function(input, output) {
     map
     
   }) #end of tableTxtChar      
+
+
+  #################################
+  # plot an editable table ########
+  output$tbl <- renderHtable({
+  
+    inFile <- input$layer
+    
+    if (is.null(inFile)) return(NULL)
+    
+    map <- read.table(inFile$datapath, as.is=TRUE)
+    
+    cachedEditable <- map
+    
+    map
+  }) #end of output$tbl  
   
 })
