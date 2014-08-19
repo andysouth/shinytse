@@ -143,5 +143,17 @@ shinyServer(function(input, output) {
         
     v$cachedTbl
   }) #end of output$tbl  
+
+###########################################
+# to save file
+output$saveFile <- downloadHandler(
   
+  filename = 'modifiedMap.txt',
+  contentType = "text/plain",
+  content = function(file) {
+    write.table(v$cachedTbl, file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+    }
+  
+  ) #end of output$saveFile
+
 })

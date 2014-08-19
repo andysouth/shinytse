@@ -14,7 +14,9 @@ shinyUI(pageWithSidebar(
     helpText("A demonstration of how maps could be loaded and edited by rtsetse, ",
              " currently it accepts tab or space-delimited text files."),
     
-    fileInput('layer', 'Choose a map text file', multiple=FALSE) #, accept='.asc')
+    fileInput('layer', 'Choose a map text file', multiple=FALSE), #, accept='.asc')
+    
+    downloadButton('saveFile', 'save modified file')
   ),
   
   mainPanel(
