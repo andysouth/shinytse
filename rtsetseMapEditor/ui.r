@@ -10,7 +10,11 @@ shinyUI(pageWithSidebar(
   headerPanel("rtsetse map editor"),
   
   sidebarPanel(
-    fileInput('layer', 'Choose Layer', multiple=FALSE) #, accept='.asc')
+    
+    helpText("A demonstration of how maps could be loaded and edited by rtsetse, ",
+             " currently it accepts tab or space-delimited text files."),
+    
+    fileInput('layer', 'Choose a map text file', multiple=FALSE) #, accept='.asc')
   ),
   
   mainPanel(
@@ -20,8 +24,8 @@ shinyUI(pageWithSidebar(
       
       tabPanel("map", plotOutput("plotTxtChar")),
       #tabPanel("plot of a gridascii", plotOutput("plotAsc")),
-      tabPanel("data table", tableOutput("tableTxtChar")),  
       tabPanel("editable", htable("tbl", colHeaders="provided")),
+      tabPanel("test data view", tableOutput("tableTxtChar")),  
       tabPanel("About", includeMarkdown("about.md"))
       
     ) # end tabsetPanel         

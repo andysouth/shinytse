@@ -15,27 +15,78 @@ shinyServer(function(input, output) {
   
   #####################################
   ### plot raster from a loaded gridAscii file ###
-  output$plotAsc <- renderPlot({
+#   output$plotAsc <- renderPlot({
+#     
+#     inFile <- input$layer
+#     
+#     if (is.null(inFile)) return(NULL)
+#     
+#     rast <- raster(inFile$datapath)
+#     
+#     plot(rast) 
+#   }) #end of plotAsc
+
+  ####################################################
+  #a conductor to read in the input file
+  readFileConductor <- reactive({ 
     
     inFile <- input$layer
     
     if (is.null(inFile)) return(NULL)
     
-    rast <- raster(inFile$datapath)
+    v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
+        
+    #  v$cachedTbl <<- readTxtChar()
     
-    plot(rast) 
-  }) #end of plotAsc
+    })
+
+#   ################################################
+#   ### read a file of a text matrix of characters return dataframe ###
+#   readTxtChar <- function(){
+#     
+#     inFile <- input$layer
+#     
+#     if (is.null(inFile)) return(NULL)
+#     
+#     mapDF <- read.table(inFile$datapath, as.is=TRUE)
+#     
+#     #save to global
+#     v$cachedTbl <<- mapDF
+#     
+#     mapDF  
+#     
+#   } #end of readTxtChar  
+
 
   ################################################
   ### plot raster from a loaded text matrix of characters ###
   output$plotTxtChar <- renderPlot({
+        
+#     mapDF <- readTxtChar()   
+#     if (is.null(mapDF)) return(NULL)
+
     
-    mapDF <- readTxtChar()
+    # BEWARE reactivity here is tricky
+    #I only want to reload the file if the input has changed
+    #a change in v$cachedTbl will also trigger this function
+    #in that case I don't want to call readTxtChar()
     
-    if (is.null(mapDF)) return(NULL)
+    #?is there a hasChanged type method in shiny ?
+    #seems not.
+
+    #this line stopped loading of a 2nd map
+    #if (is.null(v$cachedTbl)) {
+    
+    #browser()
+    
+    if( is.null(input$layer)) return(NULL)
+      #else v$cachedTbl <<- readTxtChar() #read from the inputFile
+      else readFileConductor() #read from the inputFile if it hasn't been read yet
+    #}
     
     #all these steps do seem to be necessary to convert to a numeric matrix then raster
-    mapMatrix <- as.matrix(mapDF)
+    #mapMatrix <- as.matrix(mapDF)
+    mapMatrix <- as.matrix(v$cachedTbl)
     mapFactor <- as.factor(mapMatrix)
     mapNumeric <- as.numeric(mapFactor)
     mapMatrixNumeric <- matrix(mapNumeric,nrow=nrow(mapMatrix))
@@ -44,23 +95,7 @@ shinyServer(function(input, output) {
     plot(mapRaster)    
     
   }) #end of plotTxtChar  
-
-  ################################################
-  ### read a file of a text matrix of characters return dataframe ###
-  readTxtChar <- function(){
-    
-    inFile <- input$layer
-    
-    if (is.null(inFile)) return(NULL)
-    
-    mapDF <- read.table(inFile$datapath, as.is=TRUE)
-    
-    #save to global
-    v$cachedTbl <<- mapDF
-    
-    mapDF  
-    
-  } #end of readTxtChar    
+  
   
   
   ###############################
@@ -78,25 +113,35 @@ shinyServer(function(input, output) {
   # plot an editable table ########
   output$tbl <- renderHtable({
   
-    #if no changes have been made to the table
-    #read the chosen input file
-    
     #browser()
     
-    if (is.null(input$tbl)){
+    cat(paste("in output$tbl\n",input$tbl,"\n"))
+    
+ 
+    #if no changes have been made to the table
+    #read the chosen input file
+    #check input$layer just to make it reactive to file changes
+    if ( is.null(input$tbl) & !is.null(input$layer) ){
+    #check v$cachedTable just to make it reactive to file changes
+    #if ( is.null(input$tbl) & !is.null(v$cachedTbl) ){
+      
+      readFileConductor()
       #mapDF <- readTxtChar()
       #temp test
-      mapDF <- data.frame((1:5))
+      #mapDF <- data.frame((1:5))
       
     } else {
       #save edited table changes 
-      mapDF <- input$tbl
+      #mapDF <- input$tbl
+      v$cachedTbl <<- input$tbl
     }
     
-    #save changes back to global
-    v$cachedTbl <<- mapDF
-    #to display table in plot tab
-    mapDF
+#     #save changes back to global
+#     v$cachedTbl <<- mapDF
+#     #to display table in plot tab
+#     mapDF
+        
+    v$cachedTbl
   }) #end of output$tbl  
   
 })
