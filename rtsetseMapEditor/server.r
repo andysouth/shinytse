@@ -6,7 +6,12 @@ library(raster)
 
 shinyServer(function(input, output) {
   
-  cachedEditable <- NULL
+  #global cached table of raster values
+  #to be populated from input file
+  #printed & editable in one tab
+  #used to update raster plot in another tab
+  v <- reactiveValues( cachedTbl = NULL ) 
+  #cachedTbl <- NULL
   
   #####################################
   ### plot raster from a loaded gridAscii file ###
@@ -25,14 +30,12 @@ shinyServer(function(input, output) {
   ### plot raster from a loaded text matrix of characters ###
   output$plotTxtChar <- renderPlot({
     
-    inFile <- input$layer
+    mapDF <- readTxtChar()
     
-    if (is.null(inFile)) return(NULL)
-    
-    map <- read.table(inFile$datapath, as.is=TRUE)
+    if (is.null(mapDF)) return(NULL)
     
     #all these steps do seem to be necessary to convert to a numeric matrix then raster
-    mapMatrix <- as.matrix(map)
+    mapMatrix <- as.matrix(mapDF)
     mapFactor <- as.factor(mapMatrix)
     mapNumeric <- as.numeric(mapFactor)
     mapMatrixNumeric <- matrix(mapNumeric,nrow=nrow(mapMatrix))
@@ -41,18 +44,32 @@ shinyServer(function(input, output) {
     plot(mapRaster)    
     
   }) #end of plotTxtChar  
-  
-  ###############################
-  # plot table of output results
-  output$tableTxtChar <- renderTable({
+
+  ################################################
+  ### read a file of a text matrix of characters return dataframe ###
+  readTxtChar <- function(){
     
     inFile <- input$layer
     
     if (is.null(inFile)) return(NULL)
     
-    map <- read.table(inFile$datapath, as.is=TRUE)
+    mapDF <- read.table(inFile$datapath, as.is=TRUE)
     
-    map
+    #save to global
+    v$cachedTbl <<- mapDF
+    
+    mapDF  
+    
+  } #end of readTxtChar    
+  
+  
+  ###############################
+  # table (not editable) of output results
+  output$tableTxtChar <- renderTable({
+   
+#     mapDF <- readTxtChar()
+#     mapDF
+    v$cachedTbl
     
   }) #end of tableTxtChar      
 
@@ -61,15 +78,25 @@ shinyServer(function(input, output) {
   # plot an editable table ########
   output$tbl <- renderHtable({
   
-    inFile <- input$layer
+    #if no changes have been made to the table
+    #read the chosen input file
     
-    if (is.null(inFile)) return(NULL)
+    #browser()
     
-    map <- read.table(inFile$datapath, as.is=TRUE)
+    if (is.null(input$tbl)){
+      #mapDF <- readTxtChar()
+      #temp test
+      mapDF <- data.frame((1:5))
+      
+    } else {
+      #save edited table changes 
+      mapDF <- input$tbl
+    }
     
-    cachedEditable <- map
-    
-    map
+    #save changes back to global
+    v$cachedTbl <<- mapDF
+    #to display table in plot tab
+    mapDF
   }) #end of output$tbl  
   
 })
