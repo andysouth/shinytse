@@ -1,6 +1,10 @@
 #rtsetseMapEditor/ui.r
 #andy south 12/08/2014
 
+#for me to deploy online
+#library(shinyapps)
+#deployApp('rtsetseMapEditor')
+
 library(shiny)
 library(rmarkdown)
 library(shinyTable) #for editable tables
