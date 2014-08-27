@@ -40,6 +40,8 @@ shinyServer(function(input, output) {
     
     inFile <- input$layer
     
+    cat("in readFileConductor() inFile:",inFile$datapath,"\n")
+    
     if (is.null(inFile)) return(NULL)
     
     v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
@@ -152,9 +154,8 @@ shinyServer(function(input, output) {
     
 #     #save changes back to global
 #     v$cachedTbl <<- mapDF
-#     #to display table in plot tab
-#     mapDF
-        
+     
+    #to plot table    
     v$cachedTbl
   }) #end of output$tbl  
 
