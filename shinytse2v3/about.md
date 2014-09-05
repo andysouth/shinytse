@@ -1,11 +1,13 @@
-rtsetse is an R package for simulating tsetse fly populations.
+rtsetse is an R package for simulating tsetse fly populations. It is being developed by Andy South in 2014 for the Liverpool School of Tropical Medicine.  
 
-It follows from Hat-Trick, an Excel based Tsetse model see http://www.tsetse.org
+This is one user interface for testing model functions. **Select tabs to the right on the navigation bar.**  
 
-This is one user interface to test the model functions. Select options on the left, press the run button and observe outputs on the right.
+rtsetse follows from Hat-Trick, an Excel based Tsetse model developed by Glyn Vale see http://www.tsetse.org
 
-Development by Andy South in 2014 for the Liverpool School of Tropical Medicine. Do get in touch with comments or questions.
+This user interface uses the excellent [shiny](http://http://shiny.rstudio.com/)  package for R.
 
 The code is hosted here : https://github.com/AndySouth/rtsetse
+
+Comments welcome.
 
 southandy at gmail.com

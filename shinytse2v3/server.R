@@ -27,16 +27,19 @@ library(raster)
 #run the model once just one day before start to set up output structure
 #output <- rtPhase1Test2(iDays=1, verbose=FALSE)
 bestMorts <- rtMortalityStableSeek()
-
+aspatialResults <- rtPhase1Test(iDays=1, verbose=FALSE)
+  
 
 shinyServer(function(input, output) {
 
   #I only want to run model when a button is pressed
   
   #v <- reactiveValues( output=output ) 
-  v <- reactiveValues( bestMorts=bestMorts )   
+  v <- reactiveValues( bestMorts=bestMorts,
+                       aspatialResults=aspatialResults )   
+
   
-  
+  # run mortality seeking  ##########################
   runMortSeek <- reactive({
     
     cat("in runMortSeek\n") #,input$days,"\n")
@@ -63,10 +66,44 @@ shinyServer(function(input, output) {
       
        
   }) #end of runMortSeek
+
   
 
-  ###############################
-  # plot female age structure
+  # run aspatial model   #######################
+  runModel <- reactive({
+    
+    cat("in runModel input$days=",input$days,"\n")
+    
+    if ( input$days > 0 )
+    {
+      
+      #get mortalities from the stability calculation
+      pMortF <- v$bestMorts$F
+      pMortM <- v$bestMorts$M
+      
+      #!NOTE so far they are only applied in an age independent way by rtPhase1Test
+      
+      v$aspatialResults <- rtPhase1Test(iDays = input$days,
+                               pMortF = pMortF,
+                               pMortM = pMortM, 
+                               #propMortAdultDD = input$propMortAdultDD,
+                               #iCarryCap = input$iCarryCap,
+                               #iMaxAge = input$iMaxAge,
+                               #iFirstLarva = input$iFirstLarva,
+                               #iInterLarva = input$iInterLarva,
+                               #pMortLarva = input$pMortLarva,        
+                               #propMortLarvaDD = input$propMortLarvaDD,
+                               #pMortPupa = input$pMortPupa,
+                               #propMortPupaDD = input$propMortPupaDD,
+                               #iStartAges = input$iStartAges,
+                               #iStartAdults = input$iStartAdults,                               
+                               verbose=FALSE)
+      
+    }  
+  })
+  
+  
+  # plot stability seeking  ##########################
   output$plotStableSeek <- renderPlot({
     
     #cat("in plotStableSeek input$fMperF=",input$fMperF,"\n")
@@ -78,16 +115,40 @@ shinyServer(function(input, output) {
     
   })  
  
+  # plot total adult population  ##########################
+  output$plotPop <- renderPlot({
+    
+    #needed to get plot to react when button is pressed
+    runModel()
+    
+    cat("in plotPop input$days=",input$days,"\n")
+    
+    rtPlotPopAndPupae(v$aspatialResults$dfRecordF, v$aspatialResults$dfRecordM,
+                      v$aspatialResults$dfRecordPupaF, v$aspatialResults$dfRecordPupaM)
+    
+  })  
   
- ########################################
- ## OLD FUNCTIONS FROM HERE
- ########################################
+
+  # print params used  ###############################
+  # to test whether values made it from page1 to 2
+  output$printParams <- renderPrint({
+    
+    #needed to get plot to react when button is pressed
+    #runModel()
+    
+    cat("in printParams mortF=",v$bestMorts$F,"\n")
+    
+    
+  })    
+  
+
+ ## OLD FUNCTIONS FROM HERE   ###############################
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
  
   
   
-  ###############################
-  # plot female age structure
+  # plot female age structure   ###############################
   output$plotAgeStructF <- renderPlot({
         
     #needed to get plot to react when button is pressed
@@ -100,8 +161,7 @@ shinyServer(function(input, output) {
     
   })  
 
-  ###############################
-  # plot male age structure
+  # plot male age structure  ###############################
   output$plotAgeStructM <- renderPlot({
     
     #needed to get plot to react when button is pressed
@@ -114,25 +174,8 @@ shinyServer(function(input, output) {
     
   })    
   
-  ###############################
-  # plot total adult population
-  output$plotPop <- renderPlot({
-    
-    #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
-    runModel()
-    
-    cat("in plotPop input$days=",input$days,"\n")
-        
-    #rtPlotPop(v$output$dfRecordF + v$output$dfRecordF,"Adult Flies")
-    
-    rtPlotPopAndPupae(v$output$dfRecordF, v$output$dfRecordM, v$output$dfRecordPupaF, v$output$dfRecordPupaM)
-    
-  })  
 
- 
-  ###############################
-  # plot mean age of adults
+  # plot mean age of adults  ###############################
   output$plotMeanAge <- renderPlot({
     
     runModel()

@@ -18,11 +18,22 @@ library(markdown)
 # Define UI 
 shinyUI(
   
+  #this didn't work to put text above the navbar
+  #helpText("Test..."),
+  
   #navbarPage sets up navbar, title appears on left
   navbarPage("rtsetse demonstrator",
     
-    tabPanel("seeking stable mortality",
-            
+    # tab "About" ---------------------------
+    tabPanel("About", includeMarkdown("about.md")),
+    
+             
+    # tab "seek stable mortality" ---------------------------
+    tabPanel("1 seek stable mortality", 
+      
+      helpText("Here you can set population parameters and press the seek button to find",
+               " values of adult mortality that generate a stable population."),
+             
       pageWithSidebar(
         
         #title for this page
@@ -30,7 +41,7 @@ shinyUI(
         #if no headerPanel an error is generated
         headerPanel(""),
         
-        # Sidebar with a slider input for number of observations
+        # Sidebar for inputs
         sidebarPanel(
       
           submitButton("Seek Stable Mortality"),
@@ -83,8 +94,7 @@ shinyUI(
                       max = 0.4,
                       step=0.01,
                       value = 0.05)
-          
-            
+                  
         ), #end sidebarPanel
         
         
@@ -94,18 +104,66 @@ shinyUI(
       
             tabPanel("Seeking stability", plotOutput("plotStableSeek"))     
             #tabPanel("Popn", plotOutput("plotPop")),
-            #tabPanel("Females by age", plotOutput("plotAgeStructF")),
-            #tabPanel("Males by age", plotOutput("plotAgeStructM")),
-            #tabPanel("Mean age adults", plotOutput("plotMeanAge")),
-            #tabPanel("About", includeMarkdown("about.md"))
+
           ) # end tabsetPanel         
         ) # end mainPanel
       ) # end pageWithSidebar
-    ), # end tabPanel("seeking stability mortality)  
-    tabPanel("About", includeMarkdown("about.md"))    
+    ), # end tabPanel("seeking stable mortality")
+    
+    # tab "a-spatial model" ---------------------------
+    tabPanel("2 aspatial model",
+             
+      helpText("Runs a model for a single population.",
+               " Select parameter values on the left, press run, then view different outputs on the right.",
+               " Uses mortality parameters calculated on the previous page."),
+             
+      pageWithSidebar(
+         
+         #title for this page
+         #headerPanel("shinytse2v3 - seeking stability"),
+         #if no headerPanel an error is generated
+         headerPanel(""),
+         
+         sidebarPanel(
+           
+           submitButton("Run Model"),
+           
+           sliderInput("days", 
+                       "1 Days:", 
+                       min = 1,
+                       max = 1000, 
+                       value = 100)
+         ), #end sidebarPanel   
+         mainPanel( 
+           tabsetPanel(
+             # viewing outputs -----------------
+             tabPanel("Popn", plotOutput("plotPop")),
+             tabPanel("params used", textOutput("printParams"))
+             #tabPanel("Females by age", plotOutput("plotAgeStructF")),
+             #tabPanel("Males by age", plotOutput("plotAgeStructM")),
+             #tabPanel("Mean age adults", plotOutput("plotMeanAge")),
+             #tabPanel("About", includeMarkdown("about.md"))
+           ) # end tabsetPanel         
+         ) # end mainPanel
+      ) # end pageWithSidebar             
+    ), # end tabPanel("a-spatial model") 
+    
+    # tab "spatial model" ---------------------------
+    tabPanel("3 spatial model",
+             
+     helpText("Will run gridded model (not implemented yet).",
+              " Select parameter values on the left, press run, then view different outputs on the right.",
+              " Will use parameters from previous pages.")
+    ) # end tabPanel("spatial model") 
   ) # end navbarPage   
 ) # end shinyUI
             
+
+
+
+
+
+
 
 
 
