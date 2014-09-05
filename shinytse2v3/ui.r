@@ -93,8 +93,50 @@ shinyUI(
                       min = 0.01,
                       max = 0.4,
                       step=0.01,
-                      value = 0.05)
-                  
+                      value = 0.05),
+          
+          sliderInput("iMortMinAgeStartF", 
+                      "8 Mortality minimum start day F:", 
+                      min = 2,
+                      max = 12,
+                      step = 1,
+                      value = 10),
+          
+          sliderInput("fMortMinPropF", 
+                      "9 Mortality min., proportion of day1 F:", 
+                      min = 0.05,
+                      max = 1,
+                      step = 0.05,
+                      value = 0.2),          
+
+          sliderInput("fMortOldPropF", 
+                      "10 Mortality old, proportion of day1 F:", 
+                      min = 0.2,
+                      max = 1,
+                      step = 0.1,
+                      value = 0.3),        
+          
+          sliderInput("iMortMinAgeStartM", 
+                      "11 Mortality minimum start day M:", 
+                      min = 2,
+                      max = 12,
+                      step = 1,
+                      value = 10),
+          
+          sliderInput("fMortMinPropM", 
+                      "12 Mortality min., proportion of day1 M:", 
+                      min = 0.05,
+                      max = 1,
+                      step = 0.05,
+                      value = 0.2),          
+          
+          sliderInput("fMortOldPropM", 
+                      "13 Mortality old, proportion of day1 M:", 
+                      min = 0.2,
+                      max = 1,
+                      step = 0.1,
+                      value = 0.3)
+          
         ), #end sidebarPanel
         
         

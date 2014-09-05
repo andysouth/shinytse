@@ -55,6 +55,18 @@ shinyServer(function(input, output) {
                                        pMortLarva = input$pMortLarva,    
                                
                                        #todo: add more mortality parameters in here
+                                       iMortMinAgeStartF = input$iMortMinAgeStartF,
+                                       #leave next as default
+                                       #iMortMinAgeStopF = input$iMortMinAgeStopF,
+                                       fMortMinPropF = input$fMortMinPropF,
+                                       fMortOldPropF = input$fMortOldPropF,
+                                       
+                                       iMortMinAgeStartM = input$iMortMinAgeStartM,
+                                       #leave next as default
+                                       #iMortMinAgeStopM = input$iMortMinAgeStopM,
+                                       fMortMinPropM = input$fMortMinPropM,
+                                       fMortOldPropM = input$fMortOldPropM,
+                                       
                                        
                                        #propMortLarvaDD = input$propMortLarvaDD,
                                        #propMortPupaDD = input$propMortPupaDD,
