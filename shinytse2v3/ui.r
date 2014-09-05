@@ -22,7 +22,11 @@ shinyUI(
   #helpText("Test..."),
   
   #navbarPage sets up navbar, title appears on left
-  navbarPage("rtsetse demonstrator",
+  #navbarPage("rtsetse demonstrator",
+  #trying a theme, must be compatible with Bootstrap 2.3.2 
+  #from http://bootswatch.com/2/ saved in www/ folder
+  #this theme is flatly - blue navbar & turquoise links !
+  navbarPage("rtsetse demonstrator", theme = "bootstrap.min.css",
     
     # tab "About" ---------------------------
     tabPanel("About", includeMarkdown("about.md")),
@@ -31,7 +35,7 @@ shinyUI(
     # tab "seek stable mortality" ---------------------------
     tabPanel("1 seek stable mortality", 
       
-      helpText("Here you can set population parameters and press the seek button to find",
+      helpText("Set population parameters on the left and press the seek button to find",
                " values of adult mortality that generate a stable population."),
              
       pageWithSidebar(
@@ -144,7 +148,9 @@ shinyUI(
           
           tabsetPanel(
       
-            tabPanel("Seeking stability", plotOutput("plotStableSeek"))     
+            tabPanel("Seeking stability",
+              helpText("Graph shows the program testing increasing F mortalities until it finds one that balances the population."),
+              plotOutput("plotStableSeek"))     
             #tabPanel("Popn", plotOutput("plotPop")),
 
           ) # end tabsetPanel         
@@ -174,17 +180,54 @@ shinyUI(
                        "1 Days:", 
                        min = 1,
                        max = 1000, 
-                       value = 100)
+                       value = 100),
+           
+           sliderInput("iCarryCap", 
+                       "2 Carrying Capacity:", 
+                       min = 100,
+                       max = 10000,
+                       step = 100,
+                       value = 200),   
+           
+           sliderInput("propMortAdultDD", 
+                       "3 Proportion of Ad mortality density dependent:", 
+                       min = 0,
+                       max = 1,
+                       step=0.05,
+                       value = 0), #0.25),
+               
+           sliderInput("propMortLarvaDD", 
+                       "4 Proportion of larval mort. density dependent:", 
+                       min = 0,
+                       max = 1,
+                       step=0.05,
+                       value = 0), # 0.25),
+           
+           sliderInput("propMortPupaDD", 
+                       "5 Proportion of pupal mort. density dependent:", 
+                       min = 0,
+                       max = 1,
+                       step=0.05,
+                       value = 0), # 0.25),
+           
+           sliderInput("iStartAdults", 
+                       "6 Total starting adults:", 
+                       min = 10,
+                       max = 5000,
+                       step=10,
+                       value = 200)               
+           
+           
+           
          ), #end sidebarPanel   
          mainPanel( 
            tabsetPanel(
              # viewing outputs -----------------
              tabPanel("Popn", plotOutput("plotPop")),
+             tabPanel("Females by age", plotOutput("plotAgeStructF")),
+             tabPanel("Males by age", plotOutput("plotAgeStructM")),
+             tabPanel("Mean age adults", plotOutput("plotMeanAge")),
              tabPanel("params used", textOutput("printParams"))
-             #tabPanel("Females by age", plotOutput("plotAgeStructF")),
-             #tabPanel("Males by age", plotOutput("plotAgeStructM")),
-             #tabPanel("Mean age adults", plotOutput("plotMeanAge")),
-             #tabPanel("About", includeMarkdown("about.md"))
            ) # end tabsetPanel         
          ) # end mainPanel
       ) # end pageWithSidebar             

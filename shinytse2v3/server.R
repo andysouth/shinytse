@@ -80,7 +80,21 @@ shinyServer(function(input, output) {
   }) #end of runMortSeek
 
   
-
+  # plot stability seeking  ##########################
+  output$plotStableSeek <- renderPlot({
+    
+    #cat("in plotStableSeek input$fMperF=",input$fMperF,"\n")
+    
+    #needed to get plot to react when button is pressed
+    #i'm not quite sure why, i thought it might react to v changing
+    runMortSeek()
+       
+    
+  })  
+ 
+  ## FUNCTIONS used by aspatial tab   ###############################
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
   # run aspatial model   #######################
   runModel <- reactive({
     
@@ -96,37 +110,28 @@ shinyServer(function(input, output) {
       #!NOTE so far they are only applied in an age independent way by rtPhase1Test
       
       v$aspatialResults <- rtPhase1Test(iDays = input$days,
-                               pMortF = pMortF,
-                               pMortM = pMortM, 
-                               #propMortAdultDD = input$propMortAdultDD,
-                               #iCarryCap = input$iCarryCap,
-                               #iMaxAge = input$iMaxAge,
-                               #iFirstLarva = input$iFirstLarva,
-                               #iInterLarva = input$iInterLarva,
-                               #pMortLarva = input$pMortLarva,        
-                               #propMortLarvaDD = input$propMortLarvaDD,
-                               #pMortPupa = input$pMortPupa,
-                               #propMortPupaDD = input$propMortPupaDD,
-                               #iStartAges = input$iStartAges,
-                               #iStartAdults = input$iStartAdults,                               
-                               verbose=FALSE)
+                                        pMortF = pMortF,
+                                        pMortM = pMortM, 
+                                        propMortAdultDD = input$propMortAdultDD,
+                                        iCarryCap = input$iCarryCap,
+                                        #iMaxAge = input$iMaxAge,      
+                                        propMortLarvaDD = input$propMortLarvaDD,
+                                        propMortPupaDD = input$propMortPupaDD,
+                                        #iStartAges = input$iStartAges,
+                                        iStartAdults = input$iStartAdults, 
+                                        
+                                        #the params below are taken from page1
+                                        iFirstLarva = input$iFirstLarva,
+                                        iInterLarva = input$iInterLarva,
+                                        pMortLarva = input$pMortLarva,  
+                                        pMortPupa = input$pMortPupa,
+                                        
+                                        verbose=FALSE)
       
     }  
   })
   
   
-  # plot stability seeking  ##########################
-  output$plotStableSeek <- renderPlot({
-    
-    #cat("in plotStableSeek input$fMperF=",input$fMperF,"\n")
-    
-    #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
-    runMortSeek()
-       
-    
-  })  
- 
   # plot total adult population  ##########################
   output$plotPop <- renderPlot({
     
@@ -152,14 +157,7 @@ shinyServer(function(input, output) {
     
     
   })    
-  
-
- ## OLD FUNCTIONS FROM HERE   ###############################
- #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- 
-  
-  
+   
   # plot female age structure   ###############################
   output$plotAgeStructF <- renderPlot({
         
@@ -169,7 +167,7 @@ shinyServer(function(input, output) {
     
     cat("in plotAgeStructF input$days=",input$days,"\n")
     
-    rtPlotAgeStructure(v$output$dfRecordF,"Females")
+    rtPlotAgeStructure(v$aspatialResults$dfRecordF,"Females")
     
   })  
 
@@ -182,7 +180,7 @@ shinyServer(function(input, output) {
     
     cat("in plotAgeStructM input$days=",input$days,"\n")
     
-    rtPlotAgeStructure(v$output$dfRecordM,"Males")
+    rtPlotAgeStructure(v$aspatialResults$dfRecordM,"Males")
     
   })    
   
@@ -194,7 +192,7 @@ shinyServer(function(input, output) {
     
     cat("in plotMeanAge input$days=",input$days,"\n")
     
-    rtPlotMeanAge(v$output$dfRecordF, v$output$dfRecordM,title="Mean age of adult flies")
+    rtPlotMeanAge(v$aspatialResults$dfRecordF, v$aspatialResults$dfRecordM,title="Mean age of adult flies")
         
   })    
   
