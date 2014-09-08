@@ -54,7 +54,6 @@ shinyServer(function(input, output) {
                                        pMortPupa = input$pMortPupa,
                                        pMortLarva = input$pMortLarva,    
                                
-                                       #todo: add more mortality parameters in here
                                        iMortMinAgeStartF = input$iMortMinAgeStartF,
                                        #leave next as default
                                        #iMortMinAgeStopF = input$iMortMinAgeStopF,
@@ -89,9 +88,55 @@ shinyServer(function(input, output) {
     #i'm not quite sure why, i thought it might react to v changing
     runMortSeek()
        
-    
   })  
  
+  # plot mortality by age F  ##########################
+  output$plotMortalityF <- renderPlot({
+    
+    #?needed to get plot to react when button is pressed
+    #runMortSeek()
+    
+    #!BEWARE that I have default max age set to 100 in a couple of places now. 
+    #! ideally it should be set in just one place.
+    iMaxAge <- 100
+    iMortMinAgeStopF <- 60 #left as default, unchangeable in Hat-trick
+    
+    vpMorts <- rtSetMortRatesByAge( c(1:iMaxAge),
+                                    pMortAge1 = v$bestMorts$F,
+                                    iMortMinAgeStart = input$iMortMinAgeStartF,
+                                    #leave next as default
+                                    iMortMinAgeStop = iMortMinAgeStopF,
+                                    fMortMinProp = input$fMortMinPropF,
+                                    fMortOldProp = input$fMortOldPropF )
+    
+    rtPlotMortRatesByAge(vpMorts, title="females")
+    
+  })    
+ 
+# plot mortality by age F  ##########################
+output$plotMortalityM <- renderPlot({
+  
+  #?needed to get plot to react when button is pressed
+  #runMortSeek()
+  
+  #!BEWARE that I have default max age set to 100 in a couple of places now. 
+  #! ideally it should be set in just one place.
+  iMaxAge <- 100
+  iMortMinAgeStopM <- 40 #left as default, unchangeable in Hat-trick
+  
+  vpMorts <- rtSetMortRatesByAge( c(1:iMaxAge),
+                                  pMortAge1 = v$bestMorts$M,
+                                  iMortMinAgeStart = input$iMortMinAgeStartM,
+                                  #leave next as default
+                                  iMortMinAgeStop = iMortMinAgeStopM,
+                                  fMortMinProp = input$fMortMinPropM,
+                                  fMortOldProp = input$fMortOldPropM )
+  
+  
+  rtPlotMortRatesByAge(vpMorts, title="males", col='blue')
+  
+})   
+  
   ## FUNCTIONS used by aspatial tab   ###############################
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
