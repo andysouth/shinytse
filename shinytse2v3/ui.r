@@ -149,8 +149,8 @@ shinyUI(
           tabsetPanel(
       
             tabPanel("Seeking stability",
-              helpText("Graph shows the program testing increasing F mortalities until it finds",
-                       " one that balances the population. It then seeks a male mortality that",
+              helpText("Graph shows the program testing decreasing F mortalities until it finds",
+                       " one that balances the population. It then similarly seeks a male mortality that",
                        " generates the M:F ratio requested by the user."),
               plotOutput("plotStableSeek")),     
             tabPanel("Mortality F", 

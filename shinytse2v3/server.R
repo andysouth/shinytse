@@ -152,9 +152,9 @@ output$plotMortalityM <- renderPlot({
       pMortF <- v$bestMorts$F
       pMortM <- v$bestMorts$M
       
-      #!NOTE so far they are only applied in an age independent way by rtPhase1Test
+      #calling rtPhase1Test3
       
-      v$aspatialResults <- rtPhase1Test(iDays = input$days,
+      v$aspatialResults <- rtPhase1Test3(iDays = input$days,
                                         pMortF = pMortF,
                                         pMortM = pMortM, 
                                         propMortAdultDD = input$propMortAdultDD,
