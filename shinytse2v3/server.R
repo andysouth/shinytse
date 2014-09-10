@@ -26,9 +26,9 @@ library(raster)
 
 #run the model once just one day before start to set up output structure
 #output <- rtPhase1Test2(iDays=1, verbose=FALSE)
-bestMorts <- rtMortalityStableSeek()
-aspatialResults <- rtPhase1Test(iDays=1, verbose=FALSE)
-  
+bestMorts <- rtMortalityStableSeek(plot=FALSE)
+aspatialResults <- rtPhase1Test3(iDays=1, verbose=FALSE)
+lNamedArgs <- NULL #to hold argList for aspatial model  
 
 shinyServer(function(input, output) {
 
@@ -152,9 +152,28 @@ output$plotMortalityM <- renderPlot({
       pMortF <- v$bestMorts$F
       pMortM <- v$bestMorts$M
       
-      #calling rtPhase1Test3
-      
-      v$aspatialResults <- rtPhase1Test3(iDays = input$days,
+      #calling rtPhase1Test3  
+      #version below puts args into a list so they can be printed elsewhere
+#       v$aspatialResults <- rtPhase1Test3(iDays = input$days,
+#                                         pMortF = pMortF,
+#                                         pMortM = pMortM, 
+#                                         propMortAdultDD = input$propMortAdultDD,
+#                                         iCarryCap = input$iCarryCap,
+#                                         #iMaxAge = input$iMaxAge,      
+#                                         propMortLarvaDD = input$propMortLarvaDD,
+#                                         propMortPupaDD = input$propMortPupaDD,
+#                                         #iStartAges = input$iStartAges,
+#                                         iStartAdults = input$iStartAdults, 
+#                                         
+#                                         #the params below are taken from page1
+#                                         iFirstLarva = input$iFirstLarva,
+#                                         iInterLarva = input$iInterLarva,
+#                                         pMortLarva = input$pMortLarva,  
+#                                         pMortPupa = input$pMortPupa,
+#                                         
+#                                         verbose=FALSE)
+
+            lNamedArgs <<- list(iDays = input$days,
                                         pMortF = pMortF,
                                         pMortM = pMortM, 
                                         propMortAdultDD = input$propMortAdultDD,
@@ -172,6 +191,7 @@ output$plotMortalityM <- renderPlot({
                                         pMortPupa = input$pMortPupa,
                                         
                                         verbose=FALSE)
+       v$aspatialResults <- do.call(rtPhase1Test3, lNamedArgs)
       
     }  
   })
@@ -198,8 +218,22 @@ output$plotMortalityM <- renderPlot({
     #needed to get plot to react when button is pressed
     #runModel()
     
-    cat("in printParams mortF=",v$bestMorts$F,"\n")
+    #cat("in printParams mortF=",v$bestMorts$F,"\n")
+    cat("R code to repeat this run of the model locally using rtsetse version",
+        packageDescription('rtsetse')$Version,
+        "\n\n")    
     
+    #Code to repeat this run of the model locally
+    #copied from rtReportPhase2fromShiny
+    sCommand <- "tst <- rtPhase1Test3"
+    #this creates a vector of 'name=value,'
+    vArgs <- paste0(names(lNamedArgs),"=",lNamedArgs,", ")
+    #to remove the final comma & space in args list
+    vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
+    
+    cat( sCommand,"( ",vArgs," )",sep="")
+    
+    cat( "\n\nrtPlotPopAndPupae(tst$dfRecordF, tst$dfRecordM, tst$dfRecordPupaF, tst$dfRecordPupaM)" )
     
   })    
    

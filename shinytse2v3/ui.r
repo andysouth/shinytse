@@ -233,7 +233,7 @@ shinyUI(
              tabPanel("Females by age", plotOutput("plotAgeStructF")),
              tabPanel("Males by age", plotOutput("plotAgeStructM")),
              tabPanel("Mean age adults", plotOutput("plotMeanAge")),
-             tabPanel("params used", textOutput("printParams"))
+             tabPanel("Code", verbatimTextOutput("printParams"))
            ) # end tabsetPanel         
          ) # end mainPanel
       ) # end pageWithSidebar             
