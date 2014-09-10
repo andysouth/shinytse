@@ -48,7 +48,7 @@ shinyServer(function(input, output) {
   #[day,x,y,ages] just for F to start
   v <- reactiveValues( output=output ) 
   
-  
+  # run grid model  ##########################  
   runModel <- reactive({
     
     cat("in runModel input$iDays=",input$iDays,"\n")
@@ -91,8 +91,8 @@ shinyServer(function(input, output) {
   })
   
 
-###############################
-# plotting pop maps for MF
+
+# plotting pop maps for MF ###############################
 output$plotMapDays <- renderPlot({
   
   #needed to get plot to react when button is pressed
@@ -103,8 +103,9 @@ output$plotMapDays <- renderPlot({
   rtPlotMapPop(v$output, days='all', ifManyDays = 'spread', sex='MF')
 })  
 
-###############################
-# plotting pop maps for F (not used currently)
+
+# plotting pop maps for F ###############################
+# (not used currently)
 output$plotMapDaysF <- renderPlot({
   
   #needed to get plot to react when button is pressed
@@ -116,8 +117,7 @@ output$plotMapDaysF <- renderPlot({
 })  
 
 
-###############################
-# plot pop map for final day
+# plot pop map for final day ###############################
 output$plotMapFinalDay <- renderPlot({
   
   #needed to get plot to react when button is pressed
@@ -130,8 +130,7 @@ output$plotMapFinalDay <- renderPlot({
 })  
 
 
-###############################
-# plot total adult population & by M&F for whole grid
+# plot adult popn & M&F for whole grid ###############################
 output$plotPopGrid <- renderPlot({
   
   #needed to get plot to react when button is pressed
@@ -146,8 +145,8 @@ output$plotPopGrid <- renderPlot({
   
 })  
 
-###############################
-# plot mean age of adults
+
+# plot mean age of adults ###############################
 output$plotMeanAgeGrid <- renderPlot({
   
   runModel()
@@ -158,12 +157,11 @@ output$plotMeanAgeGrid <- renderPlot({
   
 })  
 
-#########################################
-# download a report
+
+# download a report #########################################
 # code from: http://shiny.rstudio.com/gallery/download-knitr-reports.html
 # the report format is set by a Rmd file in the shiny app folder
 # note this doesn't use the reporting function from rtsetse
-
 output$downloadReport <- downloadHandler(
 #this was how to allow user to choose file
 #   filename = function() {
@@ -203,8 +201,8 @@ output$downloadReport <- downloadHandler(
   }
 )
 
-###############################
-# test plotting of inputs
+
+# test plotting of inputs ###############################
 output$testInputs <- renderText({
   
   #needed to get plot to react when button is pressed
@@ -223,8 +221,8 @@ output$testInputs <- renderText({
   
 })  
 
-###############################
-# plot age structure summed for M&F across whole grid 
+
+# plot age struct summed M&F whole grid ###############################
 output$plotAgeStruct <- renderPlot({
   
   #needed to get plot to react when button is pressed
@@ -236,65 +234,7 @@ output$plotAgeStruct <- renderPlot({
   
 })  
 
-#############################
-#functions after here are from shintse2 and probably don't work anymore
- 
-  ###############################
-  # plot female age structure
-  output$plotAgeStructF <- renderPlot({
-        
-    #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
-    runModel()
-    
-    cat("in plotAgeStructF input$iDays=",input$iDays,"\n")
-    
-    rtPlotAgeStructure(v$output$dfRecordF,"Females")
-    
-  })  
 
-  ###############################
-  # plot male age structure
-  output$plotAgeStructM <- renderPlot({
-    
-    #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
-    runModel()
-    
-    cat("in plotAgeStructM input$iDays=",input$iDays,"\n")
-    
-    rtPlotAgeStructure(v$output$dfRecordM,"Males")
-    
-  })    
-  
-  ###############################
-  # plot total adult population
-  output$plotPop <- renderPlot({
-    
-    #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
-    runModel()
-    
-    cat("in plotPop input$iDays=",input$iDays,"\n")
-        
-    #rtPlotPop(v$output$dfRecordF + v$output$dfRecordF,"Adult Flies")
-    
-    rtPlotPopAndPupae(v$output$dfRecordF, v$output$dfRecordM, v$output$dfRecordPupaF, v$output$dfRecordPupaM)
-    
-  })  
-
- 
-  ###############################
-  # plot mean age of adults
-  output$plotMeanAge <- renderPlot({
-    
-    runModel()
-    
-    cat("in plotMeanAge input$iDays=",input$iDays,"\n")
-    
-    rtPlotMeanAge(v$output$dfRecordF, v$output$dfRecordM,title="Mean age of adult flies")
-        
-  })    
   
   
 }) # end of shinyServer()
