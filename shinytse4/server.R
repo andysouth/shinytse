@@ -49,9 +49,9 @@ shinyServer(function(input, output) {
   v <- reactiveValues( output=output ) 
   
   # run grid model  ##########################  
-  runModel <- reactive({
+  runGridModel <- reactive({
     
-    cat("in runModel input$iDays=",input$iDays,"\n")
+    cat("in runGridModel input$iDays=",input$iDays,"\n")
     
     #without mention of input$ params in here
     #this doesn't run even when the Run button is pressed
@@ -96,7 +96,7 @@ shinyServer(function(input, output) {
 output$plotMapDays <- renderPlot({
   
   #needed to get plot to react when button is pressed
-  runModel()
+  runGridModel()
   
   cat("in plotMapDays input$iDays=",input$iDays,"\n")
   
@@ -109,7 +109,7 @@ output$plotMapDays <- renderPlot({
 output$plotMapDaysF <- renderPlot({
   
   #needed to get plot to react when button is pressed
-  runModel()
+  runGridModel()
   
   cat("in plotMapDaysF input$iDays=",input$iDays,"\n")
   
@@ -121,7 +121,7 @@ output$plotMapDaysF <- renderPlot({
 output$plotMapFinalDay <- renderPlot({
   
   #needed to get plot to react when button is pressed
-  runModel()
+  runGridModel()
   
   cat("in plotMapFinalDay input$iDays=",input$iDays,"\n")
   
@@ -135,7 +135,7 @@ output$plotPopGrid <- renderPlot({
   
   #needed to get plot to react when button is pressed
   #i'm not quite sure why, i thought it might react to v changing
-  runModel()
+  runGridModel()
   
   cat("in plotPopGrid input$iDays=",input$iDays,"\n")
 
@@ -149,7 +149,7 @@ output$plotPopGrid <- renderPlot({
 # plot mean age of adults ###############################
 output$plotMeanAgeGrid <- renderPlot({
   
-  runModel()
+  runGridModel()
   
   cat("in plotMeanAgeGrid input$iDays=",input$iDays,"\n")
   
@@ -199,7 +199,7 @@ output$downloadReport <- downloadHandler(
     
     file.rename(out, file)
   }
-)
+) #end downloadReport
 
 
 # test plotting of inputs ###############################
@@ -207,7 +207,7 @@ output$testInputs <- renderText({
   
   #needed to get plot to react when button is pressed
   #i'm not quite sure why, i thought it might react to v changing
-  runModel()
+  runGridModel()
   
   cat("in testInputs() input$iDays=",input$iDays,"\n")
   
@@ -226,7 +226,7 @@ output$testInputs <- renderText({
 output$plotAgeStruct <- renderPlot({
   
   #needed to get plot to react when button is pressed
-  runModel()
+  runGridModel()
   
   cat("in plotAgeStruct input$iDays=",input$iDays,"\n")
   
