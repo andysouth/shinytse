@@ -27,11 +27,11 @@ library(abind)
 
 
 #run the model once before start with minimal params
-#to initiate the global output object
-#output <- rtPhase2Test(nRow=1,nCol=1,iDays=1)
-output <- rtPhase2Test2(nRow=1,nCol=1,iDays=1,report = NULL)
+#to initiate the global gridResults object
+#gridResults <- rtPhase2Test(nRow=1,nCol=1,iDays=1)
+gridResults <- rtPhase2Test2(nRow=1,nCol=1,iDays=1,report = NULL)
 
-#the output is structured like this
+#the gridResults is structured like this
 #num [1:5, 1:100, 1:100, 1:2, 1:7] 0 0 0 0 0 0 0 0 0 0 ...
 #..$ : chr [1:5] "day0" "day1" "day2" "day3" ...
 #..$ : chr [1:100] "x1" "x2" "x3" "x4" ...
@@ -46,7 +46,7 @@ shinyServer(function(input, output) {
   #in shinytse3 the output is different to shinytse2
   #it's now a multi-dimensional array
   #[day,x,y,ages] just for F to start
-  v <- reactiveValues( output=output ) 
+  v <- reactiveValues( gridResults=gridResults ) 
   
   # run grid model  ##########################  
   runGridModel <- reactive({
@@ -59,7 +59,7 @@ shinyServer(function(input, output) {
     if ( input$iDays > 0 )
     {
 
-      v$output <- rtPhase2Test2(nRow = input$nRow,
+      v$gridResults <- rtPhase2Test2(nRow = input$nRow,
                                nCol = input$nCol,
                                pMove = input$pMove,
                                iDays = input$iDays,
@@ -100,7 +100,7 @@ output$plotMapDays <- renderPlot({
   
   cat("in plotMapDays input$iDays=",input$iDays,"\n")
   
-  rtPlotMapPop(v$output, days='all', ifManyDays = 'spread', sex='MF')
+  rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='MF')
 })  
 
 
@@ -113,7 +113,7 @@ output$plotMapDaysF <- renderPlot({
   
   cat("in plotMapDaysF input$iDays=",input$iDays,"\n")
   
-  rtPlotMapPop(v$output, days='all', ifManyDays = 'spread', sex='F')
+  rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='F')
 })  
 
 
@@ -125,7 +125,7 @@ output$plotMapFinalDay <- renderPlot({
   
   cat("in plotMapFinalDay input$iDays=",input$iDays,"\n")
   
-  rtPlotMapPop(v$output, days='final', sex='MF')
+  rtPlotMapPop(v$gridResults, days='final', sex='MF')
    
 })  
 
@@ -139,8 +139,8 @@ output$plotPopGrid <- renderPlot({
   
   cat("in plotPopGrid input$iDays=",input$iDays,"\n")
 
-  rtPlotPopGrid(v$output,"Adult Flies") 
-  #print( rtPlotPopGrid(v$output,"Adult Flies") )
+  rtPlotPopGrid(v$gridResults,"Adult Flies") 
+  #print( rtPlotPopGrid(v$gridResults,"Adult Flies") )
   
   
 })  
@@ -153,7 +153,7 @@ output$plotMeanAgeGrid <- renderPlot({
   
   cat("in plotMeanAgeGrid input$iDays=",input$iDays,"\n")
   
-  rtPlotMeanAgeGrid(v$output)
+  rtPlotMeanAgeGrid(v$gridResults)
   
 })  
 
@@ -230,7 +230,7 @@ output$plotAgeStruct <- renderPlot({
   
   cat("in plotAgeStruct input$iDays=",input$iDays,"\n")
   
-  rtPlotAgeStructure(v$output,"M & F")
+  rtPlotAgeStructure(v$gridResults,"M & F")
   
 })  
 
