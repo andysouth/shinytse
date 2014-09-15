@@ -1,15 +1,15 @@
-#shinytse2v3/ui.r
-#andy south 03/09/2014
+#shinytse7/ui.r
+#andy south 15/09/2014
 
 #seeking stability
 
 #to run type this in R console
 #library(shiny)
-#runApp('shinytse2v3')
+#runApp('shinytse7')
 #for me to deploy online
 #devtools::install_github('AndySouth/rtsetse')
 #library(shinyapps)
-#deployApp('shinytse2v3')
+#deployApp('shinytse7')
 
 
 library(shiny)
@@ -41,7 +41,7 @@ shinyUI(
       pageWithSidebar(
         
         #title for this page
-        #headerPanel("shinytse2v3 - seeking stability"),
+        #headerPanel("shinytse7 - seeking stability"),
         #if no headerPanel an error is generated
         headerPanel(""),
         
@@ -174,7 +174,7 @@ shinyUI(
       pageWithSidebar(
          
          #title for this page
-         #headerPanel("shinytse2v3 - seeking stability"),
+         #headerPanel("shinytse7 - seeking stability"),
          #if no headerPanel an error is generated
          headerPanel(""),
          
