@@ -244,7 +244,64 @@ shinyUI(
              
      helpText("Will run gridded model (not implemented yet).",
               " Select parameter values on the left, press run, then view different outputs on the right.",
-              " Will use parameters from previous pages.")
+              " Will use parameters from previous pages."),
+     
+     pageWithSidebar(
+       
+       #if no headerPanel an error is generated
+       headerPanel(""),
+     
+       sidebarPanel(
+         
+         #splitLayout did kind of work to create 2 columns of inputs, maybe come back to
+         #have to make sure there's no comma before final bracket
+         #splitLayout(
+         submitButton("Run Model"),   
+         #next 2 for report download
+         downloadButton('downloadReport',label='download run report'),
+         #),
+         #radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'), inline = TRUE),
+         
+         sliderInput("nRow", 
+                     "1 rows:", 
+                     min = 1,
+                     max = 100,
+                     step= 1,
+                     value = 9),
+         
+         sliderInput("nCol", 
+                     "2 columns:", 
+                     min = 1,
+                     max = 100,
+                     step= 1,
+                     value = 9),
+         
+         sliderInput("pMove", 
+                     "3 proportion moving:", 
+                     min = 0,
+                     max = 1,
+                     step = 0.05,
+                     value = 0.4)
+       ), #end sidebarPanel
+       
+       # mainPanel
+       mainPanel(
+         
+         tabsetPanel(
+           
+           tabPanel("Maps daily", plotOutput("plotMapDays")),
+           tabPanel("Map final", plotOutput("plotMapFinalDay")),           
+           tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
+           tabPanel("Age structure", plotOutput("plotAgeStruct")),
+           #tabPanel("Females by age", plotOutput("plotAgeStructF")),
+           #tabPanel("Males by age", plotOutput("plotAgeStructM")),
+           tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid"))
+           #tabPanel("test inputs", textOutput("testInputs")),
+           #tabPanel("About", includeMarkdown("about.md"))
+           
+           ) # end tabsetPanel                 
+         ) # end mainPanel         
+       ) # end pageWithSidebar  
     ) # end tabPanel("spatial model") 
   ) # end navbarPage   
 ) # end shinyUI
