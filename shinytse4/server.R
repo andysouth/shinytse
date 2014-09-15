@@ -28,8 +28,8 @@ library(abind)
 
 #run the model once before start with minimal params
 #to initiate the global gridResults object
-#gridResults <- rtPhase2Test(nRow=1,nCol=1,iDays=1)
-gridResults <- rtPhase2Test2(nRow=1,nCol=1,iDays=1,report = NULL)
+#also accessed from rtReportPhase2fromShiny.Rmd
+gridResults <- rtPhase2Test3(nRow=1,nCol=1,iDays=1,report = NULL)
 
 #the gridResults is structured like this
 #num [1:5, 1:100, 1:100, 1:2, 1:7] 0 0 0 0 0 0 0 0 0 0 ...
@@ -59,19 +59,19 @@ shinyServer(function(input, output) {
     if ( input$iDays > 0 )
     {
 
-      v$gridResults <- rtPhase2Test2(nRow = input$nRow,
+      v$gridResults <- rtPhase2Test3(nRow = input$nRow,
                                nCol = input$nCol,
                                pMove = input$pMove,
                                iDays = input$iDays,
                                pMortF = input$pMortF,
                                pMortM = input$pMortM, 
                                pMortPupa = input$pMortPupa,
-                               iPupaDensThresh = input$iPupaDensThresh,
-                               fSlopeDD = input$fSlopeDD,
+                               #iPupaDensThresh = input$iPupaDensThresh,
+                               #fSlopeDD = input$fSlopeDD,
+                               iCarryCap = input$iCarryCap,
                                iStartAges = input$iStartAges,
                                iStartAdults = input$iStartAdults )   
                                #iStartPupae = "sameAsAdults",
-                               #iCarryCap = input$iCarryCap,
                                #iMaxAge = 120,
                                #report = NULL )
                                
@@ -139,7 +139,7 @@ output$plotPopGrid <- renderPlot({
   
   cat("in plotPopGrid input$iDays=",input$iDays,"\n")
 
-  rtPlotPopGrid(v$gridResults,"Adult Flies") 
+  rtPlotPopGrid(v$gridResults,"Adults") 
   #print( rtPlotPopGrid(v$gridResults,"Adult Flies") )
   
   
