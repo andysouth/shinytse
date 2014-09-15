@@ -51,18 +51,18 @@ shinyServer(function(input, output) {
   # run grid model  ##########################  
   runGridModel <- reactive({
     
-    cat("in runGridModel input$iDays=",input$iDays,"\n")
+    cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
     
     #without mention of input$ params in here
     #this doesn't run even when the Run button is pressed
     #so this is a temporary workaround
-    if ( input$iDays > 0 )
+    if ( input$daysGridModel > 0 )
     {
 
       v$gridResults <- rtPhase2Test3(nRow = input$nRow,
                                nCol = input$nCol,
                                pMove = input$pMove,
-                               iDays = input$iDays,
+                               iDays = input$daysGridModel,
                                pMortF = input$pMortF,
                                pMortM = input$pMortM, 
                                pMortPupa = input$pMortPupa,
@@ -98,7 +98,7 @@ output$plotMapDays <- renderPlot({
   #needed to get plot to react when button is pressed
   runGridModel()
   
-  cat("in plotMapDays input$iDays=",input$iDays,"\n")
+  cat("in plotMapDays input$daysGridModel=",input$daysGridModel,"\n")
   
   rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='MF')
 })  
@@ -111,7 +111,7 @@ output$plotMapDaysF <- renderPlot({
   #needed to get plot to react when button is pressed
   runGridModel()
   
-  cat("in plotMapDaysF input$iDays=",input$iDays,"\n")
+  cat("in plotMapDaysF input$daysGridModel=",input$daysGridModel,"\n")
   
   rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='F')
 })  
@@ -123,7 +123,7 @@ output$plotMapFinalDay <- renderPlot({
   #needed to get plot to react when button is pressed
   runGridModel()
   
-  cat("in plotMapFinalDay input$iDays=",input$iDays,"\n")
+  cat("in plotMapFinalDay input$daysGridModel=",input$daysGridModel,"\n")
   
   rtPlotMapPop(v$gridResults, days='final', sex='MF')
    
@@ -137,7 +137,7 @@ output$plotPopGrid <- renderPlot({
   #i'm not quite sure why, i thought it might react to v changing
   runGridModel()
   
-  cat("in plotPopGrid input$iDays=",input$iDays,"\n")
+  cat("in plotPopGrid input$daysGridModel=",input$daysGridModel,"\n")
 
   rtPlotPopGrid(v$gridResults,"Adults") 
   #print( rtPlotPopGrid(v$gridResults,"Adult Flies") )
@@ -151,7 +151,7 @@ output$plotMeanAgeGrid <- renderPlot({
   
   runGridModel()
   
-  cat("in plotMeanAgeGrid input$iDays=",input$iDays,"\n")
+  cat("in plotMeanAgeGrid input$daysGridModel=",input$daysGridModel,"\n")
   
   rtPlotMeanAgeGrid(v$gridResults)
   
@@ -209,7 +209,7 @@ output$testInputs <- renderText({
   #i'm not quite sure why, i thought it might react to v changing
   runGridModel()
   
-  cat("in testInputs() input$iDays=",input$iDays,"\n")
+  cat("in testInputs() input$daysGridModel=",input$daysGridModel,"\n")
   
   lNamedArgs <- isolate(reactiveValuesToList(input))
   
@@ -228,7 +228,7 @@ output$plotAgeStruct <- renderPlot({
   #needed to get plot to react when button is pressed
   runGridModel()
   
-  cat("in plotAgeStruct input$iDays=",input$iDays,"\n")
+  cat("in plotAgeStruct input$daysGridModel=",input$daysGridModel,"\n")
   
   rtPlotAgeStructure(v$gridResults,"M & F")
   

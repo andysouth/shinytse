@@ -56,7 +56,7 @@ shinyUI(pageWithSidebar(
                 step = 0.05,
                 value = 0.4),   
     
-    sliderInput("iDays", 
+    sliderInput("daysGridModel", 
                 "4 Days:", 
                 min = 1,
                 max = 200, 
