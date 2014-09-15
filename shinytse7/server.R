@@ -29,6 +29,7 @@ library(raster)
 bestMorts <- rtMortalityStableSeek(plot=FALSE)
 aspatialResults <- rtPhase1Test3(iDays=1, verbose=FALSE)
 lNamedArgs <- NULL #to hold argList for aspatial model  
+gridResults <- rtPhase2Test3(nRow=1,nCol=1,iDays=1,report = NULL)
 
 shinyServer(function(input, output) {
 
@@ -36,7 +37,8 @@ shinyServer(function(input, output) {
   
   #v <- reactiveValues( output=output ) 
   v <- reactiveValues( bestMorts=bestMorts,
-                       aspatialResults=aspatialResults )   
+                       aspatialResults=aspatialResults,
+                       gridResults=gridResults )   
 
   
   # run mortality seeking  ##########################
@@ -274,6 +276,13 @@ output$plotMortalityM <- renderPlot({
     rtPlotMeanAge(v$aspatialResults$dfRecordF, v$aspatialResults$dfRecordM,title="Mean age of adult flies")
         
   })    
-  
+
+
+## FUNCTIONS used by simple grid tab   ###############################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#these functions came from shinytse4
+
+
+
   
 }) # end of shinyServer()
