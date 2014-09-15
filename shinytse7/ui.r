@@ -189,7 +189,7 @@ shinyUI(
                        value = 100),
            
            sliderInput("iCarryCap", 
-                       "2 Carrying Capacity:", 
+                       "2 Carrying Capacity F:", 
                        min = 100,
                        max = 10000,
                        step = 100,
@@ -276,12 +276,19 @@ shinyUI(
                      step= 1,
                      value = 9),
          
+         sliderInput("daysGrid", 
+                     "3 Days:", 
+                     min = 1,
+                     max = 1000, 
+                     value = 100),
+         
          sliderInput("pMove", 
-                     "3 proportion moving:", 
+                     "4 proportion moving:", 
                      min = 0,
                      max = 1,
                      step = 0.05,
                      value = 0.4)
+         
        ), #end sidebarPanel
        
        # mainPanel
