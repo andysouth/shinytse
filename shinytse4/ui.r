@@ -21,7 +21,7 @@ library(rmarkdown)
 shinyUI(pageWithSidebar(
   
   # Application title
-  headerPanel("shinytse4 - simple grid model with dd"),
+  headerPanel("shinytse4 - simple grid model with movement and density dependence"),
   
   # Sidebar
   sidebarPanel(
@@ -83,19 +83,39 @@ shinyUI(pageWithSidebar(
                 step=0.05,
                 value = 0.25),
     
-    sliderInput("iPupaDensThresh", 
-                "8 Pupal Density Threshold per cell:", 
-                min = 20,
-                max = 5000,
-                step = 20,
-                value = 100),  
+        sliderInput("iCarryCap", 
+                    "7 Carrying Capacity:", 
+                    min = 100,
+                    max = 10000,
+                    step = 100,
+                    value = 500),       
+        sliderInput("propMortAdultDD", 
+                    "4 Proportion of Ad mortality density dependent:", 
+                    min = 0,
+                    max = 1,
+                    step=0.05,
+                    value = 0.25),
     
-    sliderInput("fSlopeDD", 
-                "9 Slope of density-dependence in pupal mort.:", 
-                min = 0,
-                max = 1,
-                step=0.01,
-                value = 0.1), #0.25),     
+        sliderInput("propMortPupaDD", 
+                    "12 Proportion of pupal mort. density dependent:", 
+                    min = 0,
+                    max = 1,
+                    step=0.05,
+                    value = 0.25),    
+    
+#     sliderInput("iPupaDensThresh", 
+#                 "8 Pupal Density Threshold per cell:", 
+#                 min = 20,
+#                 max = 5000,
+#                 step = 20,
+#                 value = 100),  
+#     
+#     sliderInput("fSlopeDD", 
+#                 "9 Slope of density-dependence in pupal mort.:", 
+#                 min = 0,
+#                 max = 1,
+#                 step=0.01,
+#                 value = 0.1), #0.25),     
     
     
     sliderInput("iStartAges", 
@@ -113,18 +133,7 @@ shinyUI(pageWithSidebar(
                 value = 200)    
  
     
-#     sliderInput("iCarryCap", 
-#                 "7 Carrying Capacity:", 
-#                 min = 100,
-#                 max = 10000,
-#                 step = 100,
-#                 value = 500),       
-#     sliderInput("propMortAdultDD", 
-#                 "4 Proportion of Ad mortality density dependent:", 
-#                 min = 0,
-#                 max = 1,
-#                 step=0.05,
-#                 value = 0.25),
+
 #     
 #     
 #     sliderInput("iMaxAge", 
@@ -163,12 +172,7 @@ shinyUI(pageWithSidebar(
 #                 value = 0.25),
 #     
 # 
-#     sliderInput("propMortPupaDD", 
-#                 "12 Proportion of pupal mort. density dependent:", 
-#                 min = 0,
-#                 max = 1,
-#                 step=0.05,
-#                 value = 0.25)
+
         
     
     
