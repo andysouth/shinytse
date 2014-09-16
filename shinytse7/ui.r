@@ -245,9 +245,10 @@ shinyUI(
     # tab "spatial model" ---------------------------
     tabPanel("3 spatial model",
              
-     helpText("Will run gridded model (not implemented yet).",
-              " Select parameter values on the left, press run, then view different outputs on the right.",
-              " Will use parameters from previous pages."),
+     helpText("Runs a simple gridded model with a starting population in the central cell.",
+              " Uses parameters from previous pages.",
+              " Select parameter values on the left, press run, then view different outputs on the right."
+              ),
      
      pageWithSidebar(
        
@@ -282,8 +283,8 @@ shinyUI(
          sliderInput("daysGridModel", 
                      "3 Days:", 
                      min = 1,
-                     max = 1000, 
-                     value = 100),
+                     max = 100, 
+                     value = 4),
          
          sliderInput("pMove", 
                      "4 proportion moving:", 
