@@ -155,7 +155,6 @@ output$plotMortalityM <- renderPlot({
       pMortM <- v$bestMorts$M
       
       #calling rtPhase1Test3  
-      #version below puts args into a list so they can be printed elsewhere
 #       v$aspatialResults <- rtPhase1Test3(iDays = input$days,
 #                                         pMortF = pMortF,
 #                                         pMortM = pMortM, 
@@ -175,11 +174,13 @@ output$plotMortalityM <- renderPlot({
 #                                         
 #                                         verbose=FALSE)
 
+            #put args into a global list (<<-) so they can also be printed elsewhere
             lNamedArgs <<- list(iDays = input$days,
                                         pMortF = pMortF,
                                         pMortM = pMortM, 
-                                        propMortAdultDD = input$propMortAdultDD,
                                         iCarryCap = input$iCarryCap,
+                                        fStartPopPropCC = input$fStartPopPropCC,
+                                        propMortAdultDD = input$propMortAdultDD,
                                         #iMaxAge = input$iMaxAge,      
                                         propMortLarvaDD = input$propMortLarvaDD,
                                         propMortPupaDD = input$propMortPupaDD,
@@ -193,6 +194,7 @@ output$plotMortalityM <- renderPlot({
                                         pMortPupa = input$pMortPupa,
                                         
                                         verbose=FALSE)
+
        v$aspatialResults <- do.call(rtPhase1Test3, lNamedArgs)
       
     }  

@@ -189,39 +189,39 @@ shinyUI(
                        value = 100),
            
            sliderInput("iCarryCap", 
-                       "2 Carrying Capacity F:", 
+                       "2 Carrying Capacity Females:", 
                        min = 100,
                        max = 10000,
                        step = 100,
                        value = 200),   
            
+           sliderInput("fStartPopPropCC", 
+                       "3 Start popn as a proportion of CC:", 
+                       min = 0.1,
+                       max = 2,
+                       step= 0.1,
+                       value = 1),   
+           
            sliderInput("propMortAdultDD", 
-                       "3 Proportion of Ad mortality density dependent:", 
+                       "4 Proportion of Ad mortality density dependent:", 
                        min = 0,
                        max = 1,
                        step=0.05,
                        value = 0.25),
                
            sliderInput("propMortLarvaDD", 
-                       "4 Proportion of larval mort. density dependent:", 
+                       "5 Proportion of larval mort. density dependent:", 
                        min = 0,
                        max = 1,
                        step=0.05,
                        value = 0.25),
            
            sliderInput("propMortPupaDD", 
-                       "5 Proportion of pupal mort. density dependent:", 
+                       "6 Proportion of pupal mort. density dependent:", 
                        min = 0,
                        max = 1,
                        step=0.05,
-                       value = 0.25),
-           
-           sliderInput("iStartAdults", 
-                       "6 Total starting adults:", 
-                       min = 10,
-                       max = 5000,
-                       step=10,
-                       value = 200)               
+                       value = 0.25)            
            
            
            
