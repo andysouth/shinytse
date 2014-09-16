@@ -284,6 +284,191 @@ output$plotMortalityM <- renderPlot({
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #these functions came from shinytse4
 
+  # run grid model  ##########################  
+  runGridModel <- reactive({
+    
+    cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
+    
+    #without mention of input$ params in here
+    #this doesn't run even when the Run button is pressed
+    #so this is a temporary workaround
+    if ( input$daysGridModel > 0 )
+    {
+      
+      #get mortalities from the stability calculation
+      pMortF <- v$bestMorts$F
+      pMortM <- v$bestMorts$M
+      
+      v$gridResults <- rtPhase2Test3(nRow = input$nRow,
+                                     nCol = input$nCol,
+                                     pMove = input$pMove,
+                                     iDays = input$daysGridModel,
+                                     pMortF = pMortF,
+                                     pMortM = pMortM, 
+                                     pMortPupa = input$pMortPupa,
+                                     fStartPopPropCC = input$fStartPopPropCC,
+                                     iCarryCap = input$iCarryCap,
+                                     #iStartAges = input$iStartAges,
+                                     #iStartAdults = input$iStartAdults )    
+                                     propMortAdultDD = input$propMortAdultDD,
+      #                                iMaxAge = input$iMaxAge,
+                                      iFirstLarva = input$iFirstLarva,
+                                      iInterLarva = input$iInterLarva,
+                                      pMortLarva = input$pMortLarva,        
+                                      propMortLarvaDD = input$propMortLarvaDD,
+                                      propMortPupaDD = input$propMortPupaDD )                        
+                                      #verbose=FALSE)
+      
+    }
+    
+    
+  })
+  
+  
+  
+  # plotting pop maps for MF ###############################
+  output$plotMapDays <- renderPlot({
+    
+    #needed to get plot to react when button is pressed
+    runGridModel()
+    
+    cat("in plotMapDays input$daysGridModel=",input$daysGridModel,"\n")
+    
+    rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='MF')
+  })  
+  
+  
+  # plotting pop maps for F ###############################
+  # (not used currently)
+  output$plotMapDaysF <- renderPlot({
+    
+    #needed to get plot to react when button is pressed
+    runGridModel()
+    
+    cat("in plotMapDaysF input$daysGridModel=",input$daysGridModel,"\n")
+    
+    rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='F')
+  })  
+  
+  
+  # plot pop map for final day ###############################
+  output$plotMapFinalDay <- renderPlot({
+    
+    #needed to get plot to react when button is pressed
+    runGridModel()
+    
+    cat("in plotMapFinalDay input$daysGridModel=",input$daysGridModel,"\n")
+    
+    rtPlotMapPop(v$gridResults, days='final', sex='MF')
+    
+  })  
+  
+  
+  # plot adult popn & M&F for whole grid ###############################
+  output$plotPopGrid <- renderPlot({
+    
+    #needed to get plot to react when button is pressed
+    #i'm not quite sure why, i thought it might react to v changing
+    runGridModel()
+    
+    cat("in plotPopGrid input$daysGridModel=",input$daysGridModel,"\n")
+    
+    rtPlotPopGrid(v$gridResults,"Adults") 
+    #print( rtPlotPopGrid(v$gridResults,"Adult Flies") )
+    
+    
+  })  
+  
+  
+  # plot mean age of adults ###############################
+  output$plotMeanAgeGrid <- renderPlot({
+    
+    runGridModel()
+    
+    cat("in plotMeanAgeGrid input$daysGridModel=",input$daysGridModel,"\n")
+    
+    rtPlotMeanAgeGrid(v$gridResults)
+    
+  })  
+  
+  
+  # download a report #########################################
+  # code from: http://shiny.rstudio.com/gallery/download-knitr-reports.html
+  # the report format is set by a Rmd file in the shiny app folder
+  # note this doesn't use the reporting function from rtsetse
+  output$downloadReport <- downloadHandler(
+    #this was how to allow user to choose file
+    #   filename = function() {
+    #     paste('my-report', sep = '.', switch(
+    #       input$format, PDF = 'pdf', HTML = 'html', Word = 'docx'
+    #     ))
+    #   },
+    
+    # name of the report file to create
+    filename = "rtsetsePhase2Report.html",
+    
+    content = function(file) {
+      
+      #name of the Rmd file that sets what's in the report
+      filenameRmd <- 'rtReportPhase2fromShiny.Rmd'
+      
+      src <- normalizePath(filenameRmd)
+      
+      # temporarily switch to the temp dir, in case you do not have write
+      # permission to the current working directory
+      owd <- setwd(tempdir())
+      on.exit(setwd(owd))
+      file.copy(src, filenameRmd)
+      
+      library(rmarkdown)
+      
+      #this allowed rendering in pdf,html or doc
+      #     out <- render(filenameRmd, switch(
+      #       input$format,
+      #       PDF = pdf_document(), HTML = html_document(), Word = word_document()
+      #     ))
+      
+      #rendering in html only
+      out <- render(filenameRmd, html_document())    
+      
+      file.rename(out, file)
+    }
+  ) #end downloadReport
+  
+  
+  # test plotting of inputs ###############################
+  output$testInputs <- renderText({
+    
+    #needed to get plot to react when button is pressed
+    #i'm not quite sure why, i thought it might react to v changing
+    runGridModel()
+    
+    cat("in testInputs() input$daysGridModel=",input$daysGridModel,"\n")
+    
+    lNamedArgs <- isolate(reactiveValuesToList(input))
+    
+    #print(unlist())
+    
+    #names(lNamedArgs)[ names(lNamedArgs)!='iStartAges' ]
+    #cool the below works to omit 2 sets of vars, can use similar code in the report Rmd
+    names(lNamedArgs)[ substring(names(lNamedArgs),1,2)!='iS' & substring(names(lNamedArgs),1,2)!='pM' ]
+    
+  })  
+  
+  
+  # plot age struct summed M&F whole grid ###############################
+  output$plotAgeStructGrid <- renderPlot({
+    
+    #needed to get plot to react when button is pressed
+    runGridModel()
+    
+    cat("in plotAgeStructGrid input$daysGridModel=",input$daysGridModel,"\n")
+    
+    rtPlotAgeStructure(v$gridResults,"M & F")
+    
+  })  
+
+
 
 
   

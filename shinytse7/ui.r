@@ -202,27 +202,30 @@ shinyUI(
                        step= 0.1,
                        value = 1),   
            
+           helpText("4 Density Dependent proportion of:"),
+           
+           wellPanel(
            sliderInput("propMortAdultDD", 
-                       "4 Proportion of Ad mortality density dependent:", 
+                       "a adult mortality:", 
                        min = 0,
                        max = 1,
                        step=0.05,
                        value = 0.25),
                
            sliderInput("propMortLarvaDD", 
-                       "5 Proportion of larval mort. density dependent:", 
+                       "b larval mortality:", 
                        min = 0,
                        max = 1,
                        step=0.05,
                        value = 0.25),
            
            sliderInput("propMortPupaDD", 
-                       "6 Proportion of pupal mort. density dependent:", 
+                       "c pupal mortality:", 
                        min = 0,
                        max = 1,
                        step=0.05,
                        value = 0.25)            
-           
+           )#end wellPanel
            
            
          ), #end sidebarPanel   
@@ -276,7 +279,7 @@ shinyUI(
                      step= 1,
                      value = 9),
          
-         sliderInput("daysGrid", 
+         sliderInput("daysGridModel", 
                      "3 Days:", 
                      min = 1,
                      max = 1000, 
