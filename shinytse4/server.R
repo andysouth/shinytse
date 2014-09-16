@@ -223,12 +223,12 @@ output$testInputs <- renderText({
 
 
 # plot age struct summed M&F whole grid ###############################
-output$plotAgeStruct <- renderPlot({
+output$plotAgeStructGrid <- renderPlot({
   
   #needed to get plot to react when button is pressed
   runGridModel()
   
-  cat("in plotAgeStruct input$daysGridModel=",input$daysGridModel,"\n")
+  cat("in plotAgeStructGrid input$daysGridModel=",input$daysGridModel,"\n")
   
   rtPlotAgeStructure(v$gridResults,"M & F")
   
