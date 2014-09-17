@@ -1,7 +1,6 @@
 #shinytse7/server.r
 #andy south 15/09/2014
 
-#seeking stability
 
 #to run type this in R console
 #library(shiny)
@@ -12,13 +11,8 @@
 #deployApp('shinytse7')
 
 library(rtsetse)
-
-
 library(shiny)
 library(raster)
-#library(ggplot2)
-#library(reshape2)
-
 
 
 ## can put functions here
@@ -28,9 +22,9 @@ library(raster)
 #output <- rtPhase1Test2(iDays=1, verbose=FALSE)
 bestMorts <- rtMortalityStableSeek(plot=FALSE)
 aspatialResults <- rtPhase1Test3(iDays=1, verbose=FALSE)
-lNamedArgsAspatial<- NULL #to hold argList for aspatial model  
+lNamedArgsAspatial <- NULL #to hold argList for aspatial model  
 gridResults <- rtPhase2Test3(nRow=1,nCol=1,iDays=1,report = NULL)
-lNamedArgsGrid<- NULL #to hold argList for grid model  
+lNamedArgsGrid <- NULL #to hold argList for grid model  
 
 shinyServer(function(input, output) {
 
@@ -437,7 +431,7 @@ output$plotMortalityM <- renderPlot({
     content = function(file) {
       
       #name of the Rmd file that sets what's in the report
-      filenameRmd <- 'rtReportPhase2fromShiny.Rmd'
+      filenameRmd <- 'rtReportPhase2fromShinytse7.Rmd'
       
       src <- normalizePath(filenameRmd)
       
@@ -464,6 +458,7 @@ output$plotMortalityM <- renderPlot({
   
   
   # test plotting of inputs ###############################
+  #not currently used
   output$testInputs <- renderText({
     
     #needed to get plot to react when button is pressed
