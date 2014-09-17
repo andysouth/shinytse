@@ -28,8 +28,9 @@ library(raster)
 #output <- rtPhase1Test2(iDays=1, verbose=FALSE)
 bestMorts <- rtMortalityStableSeek(plot=FALSE)
 aspatialResults <- rtPhase1Test3(iDays=1, verbose=FALSE)
-lNamedArgs <- NULL #to hold argList for aspatial model  
+lNamedArgsAspatial<- NULL #to hold argList for aspatial model  
 gridResults <- rtPhase2Test3(nRow=1,nCol=1,iDays=1,report = NULL)
+lNamedArgsGrid<- NULL #to hold argList for grid model  
 
 shinyServer(function(input, output) {
 
@@ -145,7 +146,8 @@ output$plotMortalityM <- renderPlot({
   # run aspatial model   #######################
   runModel <- reactive({
     
-    cat("in runModel input$days=",input$days,"\n")
+    #this gets printed in the Code tab
+    #cat("in runModel input$days=",input$days,"\n")
     
     if ( input$days > 0 )
     {
@@ -154,48 +156,49 @@ output$plotMortalityM <- renderPlot({
       pMortF <- v$bestMorts$F
       pMortM <- v$bestMorts$M
       
-      #calling rtPhase1Test3  
-#       v$aspatialResults <- rtPhase1Test3(iDays = input$days,
-#                                         pMortF = pMortF,
-#                                         pMortM = pMortM, 
-#                                         propMortAdultDD = input$propMortAdultDD,
-#                                         iCarryCap = input$iCarryCap,
-#                                         #iMaxAge = input$iMaxAge,      
-#                                         propMortLarvaDD = input$propMortLarvaDD,
-#                                         propMortPupaDD = input$propMortPupaDD,
-#                                         #iStartAges = input$iStartAges,
-#                                         iStartAdults = input$iStartAdults, 
-#                                         
-#                                         #the params below are taken from page1
-#                                         iFirstLarva = input$iFirstLarva,
-#                                         iInterLarva = input$iInterLarva,
-#                                         pMortLarva = input$pMortLarva,  
-#                                         pMortPupa = input$pMortPupa,
-#                                         
-#                                         verbose=FALSE)
+      #put args into a global list (<<-) so they can also be printed elsewhere
+      lNamedArgsAspatial <<- list(iDays = input$days,
+                                  pMortF = pMortF,
+                                  pMortM = pMortM, 
+                                  iCarryCap = input$iCarryCap,
+                                  fStartPopPropCC = input$fStartPopPropCC,
+                                  propMortAdultDD = input$propMortAdultDD,
+                                  #iMaxAge = input$iMaxAge,      
+                                  propMortLarvaDD = input$propMortLarvaDD,
+                                  propMortPupaDD = input$propMortPupaDD,
+                                  #iStartAges = input$iStartAges,
+                                  iStartAdults = input$iStartAdults, 
+                                  
+                                  #the params below are taken from page1
+                                  iFirstLarva = input$iFirstLarva,
+                                  iInterLarva = input$iInterLarva,
+                                  pMortLarva = input$pMortLarva,  
+                                  pMortPupa = input$pMortPupa,
+                                  
+                                  verbose=FALSE)
 
-            #put args into a global list (<<-) so they can also be printed elsewhere
-            lNamedArgs <<- list(iDays = input$days,
-                                        pMortF = pMortF,
-                                        pMortM = pMortM, 
-                                        iCarryCap = input$iCarryCap,
-                                        fStartPopPropCC = input$fStartPopPropCC,
-                                        propMortAdultDD = input$propMortAdultDD,
-                                        #iMaxAge = input$iMaxAge,      
-                                        propMortLarvaDD = input$propMortLarvaDD,
-                                        propMortPupaDD = input$propMortPupaDD,
-                                        #iStartAges = input$iStartAges,
-                                        iStartAdults = input$iStartAdults, 
-                                        
-                                        #the params below are taken from page1
-                                        iFirstLarva = input$iFirstLarva,
-                                        iInterLarva = input$iInterLarva,
-                                        pMortLarva = input$pMortLarva,  
-                                        pMortPupa = input$pMortPupa,
-                                        
-                                        verbose=FALSE)
+       #run the model with the list of args
+       v$aspatialResults <- do.call(rtPhase1Test3, lNamedArgsAspatial)
 
-       v$aspatialResults <- do.call(rtPhase1Test3, lNamedArgs)
+      #old way of doing before args were put into a list  
+      #       v$aspatialResults <- rtPhase1Test3(iDays = input$days,
+      #                                         pMortF = pMortF,
+      #                                         pMortM = pMortM, 
+      #                                         propMortAdultDD = input$propMortAdultDD,
+      #                                         iCarryCap = input$iCarryCap,
+      #                                         #iMaxAge = input$iMaxAge,      
+      #                                         propMortLarvaDD = input$propMortLarvaDD,
+      #                                         propMortPupaDD = input$propMortPupaDD,
+      #                                         #iStartAges = input$iStartAges,
+      #                                         iStartAdults = input$iStartAdults, 
+      #                                         
+      #                                         #the params below are taken from page1
+      #                                         iFirstLarva = input$iFirstLarva,
+      #                                         iInterLarva = input$iInterLarva,
+      #                                         pMortLarva = input$pMortLarva,  
+      #                                         pMortPupa = input$pMortPupa,
+      #                                         
+      #                                         verbose=FALSE)
       
     }  
   })
@@ -215,14 +218,12 @@ output$plotMortalityM <- renderPlot({
   })  
   
 
-  # print params used  ###############################
-  # to test whether values made it from page1 to 2
-  output$printParams <- renderPrint({
+  # print params used in aspatial model ###############################
+  output$printParamsAspatial <- renderPrint({
     
     #needed to get plot to react when button is pressed
-    #runModel()
+    runModel()
     
-    #cat("in printParams mortF=",v$bestMorts$F,"\n")
     cat("R code to repeat this run of the model locally using rtsetse version",
         packageDescription('rtsetse')$Version,
         "\n\n")    
@@ -231,7 +232,7 @@ output$plotMortalityM <- renderPlot({
     #copied from rtReportPhase2fromShiny
     sCommand <- "tst <- rtPhase1Test3"
     #this creates a vector of 'name=value,'
-    vArgs <- paste0(names(lNamedArgs),"=",lNamedArgs,", ")
+    vArgs <- paste0(names(lNamedArgsAspatial),"=",lNamedArgsAspatial,", ")
     #to remove the final comma & space in args list
     vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
     
@@ -287,7 +288,7 @@ output$plotMortalityM <- renderPlot({
   # run grid model  ##########################  
   runGridModel <- reactive({
     
-    cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
+    #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
     
     #without mention of input$ params in here
     #this doesn't run even when the Run button is pressed
@@ -299,25 +300,51 @@ output$plotMortalityM <- renderPlot({
       pMortF <- v$bestMorts$F
       pMortM <- v$bestMorts$M
       
-      v$gridResults <- rtPhase2Test3(nRow = input$nRow,
-                                     nCol = input$nCol,
-                                     pMove = input$pMove,
-                                     iDays = input$daysGridModel,
-                                     pMortF = pMortF,
-                                     pMortM = pMortM, 
-                                     pMortPupa = input$pMortPupa,
-                                     fStartPopPropCC = input$fStartPopPropCC,
-                                     iCarryCap = input$iCarryCap,
-                                     #iStartAges = input$iStartAges,
-                                     #iStartAdults = input$iStartAdults )    
-                                     propMortAdultDD = input$propMortAdultDD,
-      #                                iMaxAge = input$iMaxAge,
-                                      iFirstLarva = input$iFirstLarva,
-                                      iInterLarva = input$iInterLarva,
-                                      pMortLarva = input$pMortLarva,        
-                                      propMortLarvaDD = input$propMortLarvaDD,
-                                      propMortPupaDD = input$propMortPupaDD )                        
-                                      #verbose=FALSE)
+      #put args into a global list (<<-) so they can also be printed elsewhere
+      lNamedArgsGrid <<- list(nRow = input$nRow,
+                              nCol = input$nCol,
+                              pMove = input$pMove,
+                              iDays = input$daysGridModel,
+                              pMortF = pMortF,
+                              pMortM = pMortM, 
+                              pMortPupa = input$pMortPupa,
+                              fStartPopPropCC = input$fStartPopPropCC,
+                              iCarryCap = input$iCarryCap,
+                              #iStartAges = input$iStartAges,
+                              #iStartAdults = input$iStartAdults )    
+                              propMortAdultDD = input$propMortAdultDD,
+                              #iMaxAge = input$iMaxAge,
+                              iFirstLarva = input$iFirstLarva,
+                              iInterLarva = input$iInterLarva,
+                              pMortLarva = input$pMortLarva,        
+                              propMortLarvaDD = input$propMortLarvaDD,
+                              propMortPupaDD = input$propMortPupaDD )                        
+                              #verbose=FALSE)
+      
+      #run the model with the list of args
+      v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
+      
+      
+#       #old way of doing before args put into a list
+#       v$gridResults <- rtPhase2Test3(nRow = input$nRow,
+#                                      nCol = input$nCol,
+#                                      pMove = input$pMove,
+#                                      iDays = input$daysGridModel,
+#                                      pMortF = pMortF,
+#                                      pMortM = pMortM, 
+#                                      pMortPupa = input$pMortPupa,
+#                                      fStartPopPropCC = input$fStartPopPropCC,
+#                                      iCarryCap = input$iCarryCap,
+#                                      #iStartAges = input$iStartAges,
+#                                      #iStartAdults = input$iStartAdults )    
+#                                      propMortAdultDD = input$propMortAdultDD,
+#                                      #iMaxAge = input$iMaxAge,
+#                                      iFirstLarva = input$iFirstLarva,
+#                                      iInterLarva = input$iInterLarva,
+#                                      pMortLarva = input$pMortLarva,        
+#                                      propMortLarvaDD = input$propMortLarvaDD,
+#                                      propMortPupaDD = input$propMortPupaDD )                        
+#                                      #verbose=FALSE)
       
     }
     
@@ -440,17 +467,16 @@ output$plotMortalityM <- renderPlot({
   output$testInputs <- renderText({
     
     #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
     runGridModel()
     
     cat("in testInputs() input$daysGridModel=",input$daysGridModel,"\n")
     
+    #this gets all of the reactive values
+    #problem with that is that not all of them apply to the grid model
     lNamedArgs <- isolate(reactiveValuesToList(input))
     
-    #print(unlist())
-    
     #names(lNamedArgs)[ names(lNamedArgs)!='iStartAges' ]
-    #cool the below works to omit 2 sets of vars, can use similar code in the report Rmd
+    #below works to omit 2 sets of vars, can use similar code in the report Rmd
     names(lNamedArgs)[ substring(names(lNamedArgs),1,2)!='iS' & substring(names(lNamedArgs),1,2)!='pM' ]
     
   })  
@@ -464,11 +490,33 @@ output$plotMortalityM <- renderPlot({
     
     cat("in plotAgeStructGrid input$daysGridModel=",input$daysGridModel,"\n")
     
-    rtPlotAgeStructure(v$gridResults,"M & F")
+    rtPlotAgeStructure(v$gridResults,"M & F summed for whole grid")
     
   })  
 
-
+# print params used in simple grid model ###############################
+output$printParamsGrid <- renderPrint({
+  
+  #needed to get plot to react when button is pressed
+  runGridModel()
+  
+  cat("R code to repeat this run of the model locally using rtsetse version",
+      packageDescription('rtsetse')$Version,
+      "\n\n")    
+  
+  #Code to repeat this run of the model locally
+  #copied from rtReportPhase2fromShiny
+  sCommand <- "tst <- rtPhase2Test3"
+  #this creates a vector of 'name=value,'
+  vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")
+  #to remove the final comma & space in args list
+  vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
+  
+  cat( sCommand,"( ",vArgs," )",sep="")
+  
+  cat( "\n\n#to plot some results \nrtPlotMapPop(tst)" )
+  
+})    
 
 
   
