@@ -169,7 +169,9 @@ shinyUI(
              
       helpText("Runs a model for a single population.",
                " Select parameter values on the left, press run, then view different outputs on the right.",
-               " Uses mortality parameters calculated on the previous page."),
+               " Uses mortality parameters calculated on the previous page.",
+               " Copy from the Code tab on the right to repeat this run locally in R."
+               ),
              
       pageWithSidebar(
          
@@ -246,8 +248,10 @@ shinyUI(
     tabPanel("3 spatial model",
              
      helpText("Runs a simple gridded model with a starting population in the central cell.",
-              " Uses parameters from previous pages.",
-              " Select parameter values on the left, press run, then view different outputs on the right."
+              " Uses parameters from previous pages to run the aspatial model in each cell and move flies between cells.",
+              " Select parameter values on the left, press run, then view different outputs on the right.",
+              " Use the button on the left to download a run report, or the Code tab on the right to copy",
+              " the code to repeat this run locally in R."
               ),
      
      pageWithSidebar(
