@@ -11,6 +11,8 @@ These are the current main user interfaces.
 
 Shiny app name  | What it does  | To access on web
 ------------- | -------------| -------------
+shinytse7 | User Interface running aspatial and gridded models | http://andysouth.shinyapps.io/shinytse7/
+Old versions | | 
 shinytse2v2 | aspatial model with dd through pupal mortality | http://andysouth.shinyapps.io/shinytse2v2/
 shinytse4 | simple grid model with dd | http://andysouth.shinyapps.io/shinytse4/
 shinytse5 | feeding demo | http://andysouth.shinyapps.io/shinytse5/
