@@ -303,7 +303,7 @@ shinyUI(
            tabPanel("Maps daily", plotOutput("plotMapDays")),
            tabPanel("Map final", plotOutput("plotMapFinalDay")),           
            tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
-           tabPanel("Age structure", plotOutput("plotAgeStruct")),
+           tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
            #tabPanel("Females by age", plotOutput("plotAgeStructF")),
            #tabPanel("Males by age", plotOutput("plotAgeStructM")),
            tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid")),
