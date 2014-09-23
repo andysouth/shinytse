@@ -247,9 +247,48 @@ shinyUI(
     # menu tab "spatial model" ---------------------------
     # tmp test adding a menu item, that will create dropdown
     navbarMenu("3 spatial model",
-    tabPanel("3.1 spread test",
+     
+     # tab load grid ---------------------------           
+     tabPanel("3.1 load grid",
+              
+      helpText("Allows loading of a text file containing a grid of carrying capacities to",
+               " be used in the simulation. Currently it starts with an example map and accepts",
+               " tab or space-delimited text files."),
+      
+      pageWithSidebar(        
+        #if no headerPanel an error is generated
+        headerPanel(""),
+        
+        sidebarPanel(
+        
+          fileInput('layer', 'Choose a map text file', multiple=FALSE)
+          
+          #, accept='.asc')
+          
+          #actionButton('loadExDataButton', 'Load example data'),
+          #br(),
+          #downloadButton('saveFile', 'save modified file')
+        ), # end sidebarPanel
+      
+      mainPanel(       
+        
+        tabsetPanel(
+          
+          #tabPanel("map", plotOutput("plotTxtChar")),
+          #tabPanel("plot of a gridascii", plotOutput("plotAsc")),
+          #tabPanel("editable", htable("tbl", colHeaders="provided")),
+          #tabPanel("test data view", tableOutput("tableTxtChar")),  
+          tabPanel("About", includeMarkdown("about.md"))
+          
+        ) # end tabsetPanel         
+       ) # end mainPanel              
+      ) # end pageWithSidebar        
+     ), # end tabPanel("load grid")               
+     
+     # tab run grid model ---------------------------                      
+     tabPanel("3.2 run model on grid",
              
-     helpText("Runs a simple gridded model with a starting population in the central cell.",
+     helpText("Runs a simple gridded model with a starting population across whole grid or just in the central cell.",
               " Uses parameters from previous pages to run the aspatial model in each cell and move flies between cells.",
               " Select parameter values on the left, press run, then view different outputs on the right.",
               " Use the button on the left to download a run report, or the Code tab on the right to copy",
