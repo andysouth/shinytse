@@ -244,8 +244,10 @@ shinyUI(
       ) # end pageWithSidebar             
     ), # end tabPanel("a-spatial model") 
     
-    # tab "spatial model" ---------------------------
-    tabPanel("3 spatial model",
+    # menu tab "spatial model" ---------------------------
+    # tmp test adding a menu item, that will create dropdown
+    navbarMenu("3 spatial model",
+    tabPanel("3.1 spread test",
              
      helpText("Runs a simple gridded model with a starting population in the central cell.",
               " Uses parameters from previous pages to run the aspatial model in each cell and move flies between cells.",
@@ -269,6 +271,9 @@ shinyUI(
          downloadButton('downloadReport',label='download run report'),
          #),
          #radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'), inline = TRUE),
+         
+         #checkbox for whether to test spread on uniform grid
+         checkboxInput('testSpread', "Test spread on uniform grid", value = TRUE),
          
          sliderInput("nRow", 
                      "1 rows:", 
@@ -319,6 +324,7 @@ shinyUI(
          ) # end mainPanel         
        ) # end pageWithSidebar  
     ) # end tabPanel("spatial model") 
+    ) # end navbarMenu("3 spatial model", testing
   ) # end navbarPage   
 ) # end shinyUI
             

@@ -316,8 +316,26 @@ output$plotMortalityM <- renderPlot({
                               #verbose=FALSE)
       
       #run the model with the list of args
-      v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
+      #v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
       
+      #now I want to change what is run according to checkbox
+      #but difficulty that the args for the functions are different
+      #as a temporary workaround can use formals to get the arg of a function
+      
+      if ( input$testSpread )
+        v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
+      else
+      {
+        #just use those args that are in the arg list for rtPhase5Test
+        #!!BEWARE this is a temporary hack !!
+        lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rtPhase5Test")))]
+        
+        v$gridResults <- do.call(rtPhase5Test, lNamedArgsGrid)                
+      }
+
+        
+        
+        
       
 #       #old way of doing before args put into a list
 #       v$gridResults <- rtPhase2Test3(nRow = input$nRow,
@@ -343,7 +361,7 @@ output$plotMortalityM <- renderPlot({
     }
     
     
-  })
+  }) # end runGridModel 
   
   
   
@@ -502,6 +520,18 @@ output$printParamsGrid <- renderPrint({
   #Code to repeat this run of the model locally
   #copied from rtReportPhase2fromShiny
   sCommand <- "tst <- rtPhase2Test3"
+  
+  #todo! see in runGridModel how the function & arguments are changed
+  #if the testSpread button is not selected.
+  #it will be something like :
+  #if ( !input$testSpread ) "tst <- rtPhase2Test5"
+  #but then I also may need to modify the args
+  #not a priority for now because noone but me is running the R code yet
+  #slight issue that when functions start using map files
+  #it's less easy to make the code reproducible
+  #although I might be able to use struct() to pass a copy of the matrix from a file
+  
+  
   #this creates a vector of 'name=value,'
   vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")
   #to remove the final comma & space in args list
