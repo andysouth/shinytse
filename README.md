@@ -16,3 +16,5 @@ Old versions | |
 shinytse2v2 | aspatial model with dd through pupal mortality | http://andysouth.shinyapps.io/shinytse2v2/
 shinytse4 | simple grid model with dd | http://andysouth.shinyapps.io/shinytse4/
 shinytse5 | feeding demo | http://andysouth.shinyapps.io/shinytse5/
+
+southandy at gmail.com
