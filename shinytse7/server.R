@@ -33,8 +33,13 @@ shinyServer(function(input, output) {
   #v <- reactiveValues( output=output ) 
   v <- reactiveValues( bestMorts=bestMorts,
                        aspatialResults=aspatialResults,
-                       gridResults=gridResults )   
-
+                       gridResults=gridResults,
+                       cachedTbl = NULL ) 
+  
+  #load an example CC map to start
+  #inFile <- "mapVeg50Text.txt" 
+  inFile <- "exampleCCmap4x4.txt"
+  v$cachedTbl <- read.table(inFile, as.is=TRUE)  
   
   # run mortality seeking  ##########################
   runMortSeek <- reactive({
@@ -275,6 +280,64 @@ output$plotMortalityM <- renderPlot({
   })    
 
 
+## FUNCTIONS used by file loading tab   ###############################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#these functions came from rtsetseMapEditor
+
+# read input file -----
+readFileConductor <- reactive({ 
+  
+  inFile <- input$fileMap
+  
+  cat("in readFileConductor() inFile:",inFile$datapath,"\n")
+  
+  if (is.null(inFile)) return(NULL)
+  
+  v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
+  
+  #  v$cachedTbl <<- readTxtChar()
+})
+
+# table of inFile (not editable) -----
+output$tableNonEdit <- renderTable({
+  
+  if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
+  #else v$cachedTbl <<- readTxtChar() #read from the inputFile
+  else readFileConductor() #read from the inputFile if it hasn't been read yet
+  #}
+  
+  #     mapDF <- readTxtChar()
+  #     mapDF
+  v$cachedTbl
+  
+}) #end of tableNonEdit 
+
+### plot raster from a loaded text matrix of characters ###
+output$plotLoadedMap <- renderPlot({
+   
+  if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
+  #else v$cachedTbl <<- readTxtChar() #read from the inputFile
+  else readFileConductor() #read from the inputFile if it hasn't been read yet
+  #}
+  
+  #all these steps do seem to be necessary to convert to a numeric matrix then raster
+  #mapMatrix <- as.matrix(mapDF)
+  mapMatrix <- as.matrix(v$cachedTbl)
+  #mapFactor <- as.factor(mapMatrix)
+  #mapNumeric <- as.numeric(mapFactor)
+  #mapMatrixNumeric <- matrix(mapNumeric,nrow=nrow(mapMatrix))
+  #mapRaster <- raster(mapMatrixNumeric)
+  mapRaster <- raster(mapMatrix)  
+  
+  #set extents for plotting (otherwise they go from 0-1)
+  #this also ensures that cells maintain square aspect ratio 
+  extent(mapRaster) <- extent(c(0, ncol(mapRaster), 0, nrow(mapRaster)))
+  
+  plot(mapRaster)    
+  
+}) #end of plotLoadedMap  
+
+
 ## FUNCTIONS used by simple grid tab   ###############################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #these functions came from shinytse4
@@ -330,9 +393,14 @@ output$plotMortalityM <- renderPlot({
         #!!BEWARE this is a temporary hack !!
         lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rtPhase5Test")))]
         
+        #add the matrix containing CCs to the arg list
+        lArgsToAdd <- list(mCarryCapF=as.matrix(v$cachedTbl))
+        lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
+        
+        cat("in runGridModel() calling rtPhase5Test with args:",unlist(lNamedArgsGrid))
+        
         v$gridResults <- do.call(rtPhase5Test, lNamedArgsGrid)                
       }
-
         
         
         

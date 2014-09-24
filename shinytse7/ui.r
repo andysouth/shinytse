@@ -261,7 +261,7 @@ shinyUI(
         
         sidebarPanel(
         
-          fileInput('layer', 'Choose a map text file', multiple=FALSE)
+          fileInput('fileMap', 'Choose a map text file', multiple=FALSE)
           
           #, accept='.asc')
           
@@ -274,11 +274,11 @@ shinyUI(
         
         tabsetPanel(
           
-          #tabPanel("map", plotOutput("plotTxtChar")),
+          tabPanel("loaded map", plotOutput("plotLoadedMap")),
           #tabPanel("plot of a gridascii", plotOutput("plotAsc")),
           #tabPanel("editable", htable("tbl", colHeaders="provided")),
-          #tabPanel("test data view", tableOutput("tableTxtChar")),  
-          tabPanel("About", includeMarkdown("about.md"))
+          tabPanel("loaded file table", tableOutput("tableNonEdit"))  
+          #tabPanel("About", includeMarkdown("about.md"))
           
         ) # end tabsetPanel         
        ) # end mainPanel              
