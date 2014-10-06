@@ -314,19 +314,26 @@ shinyUI(
          #checkbox for whether to test spread on uniform grid
          checkboxInput('testSpread', "Test spread on uniform grid", value = TRUE),
          
-         sliderInput("nRow", 
-                     "1 rows:", 
-                     min = 1,
-                     max = 100,
-                     step= 1,
-                     value = 9),
+         #conditionalPanel so that rows & cols only visible for uniform grid
+         conditionalPanel(
+           condition = "input.testSpread == true",
+           
+           sliderInput("nRow", 
+                       "1 rows:", 
+                       min = 1,
+                       max = 100,
+                       step= 1,
+                       value = 9),
+           
+           sliderInput("nCol", 
+                       "2 columns:", 
+                       min = 1,
+                       max = 100,
+                       step= 1,
+                       value = 9)           
+
+          ), #end conditionalPanel
          
-         sliderInput("nCol", 
-                     "2 columns:", 
-                     min = 1,
-                     max = 100,
-                     step= 1,
-                     value = 9),
          
          sliderInput("daysGridModel", 
                      "3 Days:", 
