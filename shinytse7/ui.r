@@ -305,7 +305,12 @@ shinyUI(
          #splitLayout did kind of work to create 2 columns of inputs, maybe come back to
          #have to make sure there's no comma before final bracket
          #splitLayout(
-         submitButton("Run Model"),   
+         submitButton("Run Model"),
+         #trying an actionButton instead of the submitButton
+         #but doesn't trigger model yet and other submitButton's elsewhere stop 
+         #conditionalPanel responding
+         #actionButton("action","Run Model"),   
+         
          #next 2 for report download
          downloadButton('downloadReport',label='download run report'),
          #),
