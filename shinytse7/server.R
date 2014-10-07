@@ -352,7 +352,6 @@ output$plotLoadedMap <- renderPlot({
     
     #without mention of input$ params in here
     #this doesn't run even when the Run button is pressed
-    #so this is a temporary workaround
     if ( input$daysGridModel > 0 )
     {
       
@@ -361,8 +360,9 @@ output$plotLoadedMap <- renderPlot({
       pMortM <- v$bestMorts$M
       
       #put args into a global list (<<-) so they can also be printed elsewhere
-      lNamedArgsGrid <<- list(nRow = input$nRow,
-                              nCol = input$nCol,
+      lNamedArgsGrid <<- list(
+                              #nRow = input$nRow,
+                              #nCol = input$nCol,
                               pMove = input$pMove,
                               iDays = input$daysGridModel,
                               pMortF = pMortF,

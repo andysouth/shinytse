@@ -319,37 +319,38 @@ shinyUI(
          #radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'), inline = TRUE),
          
          #checkbox for whether to test spread on uniform grid
-         checkboxInput('testSpread', "Test spread on uniform grid", value = TRUE),
+         checkboxInput('testSpread', "Test spread on uniform grid", value = FALSE),
          
          #conditionalPanel so that rows & cols only visible for uniform grid
-         conditionalPanel(
-           condition = "input.testSpread == true",
+         #doesn't respond due to submitButton
+         #conditionalPanel(
+         #   condition = "input.testSpread == true",
            
-           sliderInput("nRow", 
-                       "1 rows:", 
-                       min = 1,
-                       max = 100,
-                       step= 1,
-                       value = 9),
-           
-           sliderInput("nCol", 
-                       "2 columns:", 
-                       min = 1,
-                       max = 100,
-                       step= 1,
-                       value = 9)           
+#            sliderInput("nRow", 
+#                        "1 rows:", 
+#                        min = 1,
+#                        max = 100,
+#                        step= 1,
+#                        value = 9),
+#            
+#            sliderInput("nCol", 
+#                        "2 columns:", 
+#                        min = 1,
+#                        max = 100,
+#                        step= 1,
+#                        value = 9)           
 
-          ), #end conditionalPanel
+         # ), #end conditionalPanel
          
          
          sliderInput("daysGridModel", 
-                     "3 Days:", 
+                     "1 Days:", 
                      min = 1,
                      max = 100, 
                      value = 4),
          
          sliderInput("pMove", 
-                     "4 proportion moving:", 
+                     "2 proportion moving:", 
                      min = 0,
                      max = 1,
                      step = 0.05,
