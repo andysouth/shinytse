@@ -288,7 +288,8 @@ shinyUI(
      # tab run grid model ---------------------------                      
      tabPanel("3.2 run model on grid",
              
-     helpText("Runs a simple gridded model with a starting population across whole grid or just in the central cell.",
+     helpText("Runs a simple gridded model with a starting population defined by the carrying capacities in the loaded grid.",
+              " If you tick 'Test spread' popn is started from single central cell on a uniform grid.",
               " Uses parameters from previous pages to run the aspatial model in each cell and move flies between cells.",
               " Select parameter values on the left, press run, then view different outputs on the right.",
               " Use the button on the left to download a run report, or the Code tab on the right to copy",
