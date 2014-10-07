@@ -303,13 +303,15 @@ shinyUI(
        sidebarPanel(
          
          #splitLayout did kind of work to create 2 columns of inputs, maybe come back to
-         #have to make sure there's no comma before final bracket
          #splitLayout(
+         
+         
          submitButton("Run Model"),
+         
          #trying an actionButton instead of the submitButton
-         #but doesn't trigger model yet and other submitButton's elsewhere stop 
-         #conditionalPanel responding
-         #actionButton("action","Run Model"),   
+         #doesn't trigger model yet : perhaps I need to add dependency in runGridModel
+         #other submitButton's elsewhere stop conditionalPanel responding
+         #actionButton("actionGridModel","Run Model"),   
          
          #next 2 for report download
          downloadButton('downloadReport',label='download run report'),
@@ -367,6 +369,7 @@ shinyUI(
            #tabPanel("Females by age", plotOutput("plotAgeStructF")),
            #tabPanel("Males by age", plotOutput("plotAgeStructM")),
            tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid")),
+           tabPanel("test inputs", textOutput("testInputVals")),
            tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
            #tabPanel("test inputs", textOutput("testInputs")),
            #tabPanel("About", includeMarkdown("about.md"))

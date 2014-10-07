@@ -345,6 +345,9 @@ output$plotLoadedMap <- renderPlot({
   # run grid model  ##########################  
   runGridModel <- reactive({
     
+    #8/10/14 trying adding a dependency on new action button
+    #input$actionGridModel
+    
     #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
     
     #without mention of input$ params in here
@@ -435,6 +438,9 @@ output$plotLoadedMap <- renderPlot({
   
   # plotting pop maps for MF ###############################
   output$plotMapDays <- renderPlot({
+    
+    #8/10/14 trying adding a dependency on new action button
+    #input$actionGridModel
     
     #needed to get plot to react when button is pressed
     runGridModel()
@@ -611,6 +617,19 @@ output$printParamsGrid <- renderPrint({
   
 })    
 
+# display values of input for testing ###############################
+output$testInputVals <- renderText({
+
+  #needed to get plot to react when button is pressed
+  runGridModel()
+  
+  #browser()
+  lNamedArgs <- isolate(reactiveValuesToList(input))   
+  namedArgs <- unlist(lNamedArgs) 
+  paste0(names(namedArgs),"=",namedArgs)
+  
+  
+}) #end of testInputVals 
 
   
 }) # end of shinyServer()
