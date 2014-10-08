@@ -398,11 +398,26 @@ output$plotLoadedMap <- renderPlot({
         
         #add the matrix containing CCs to the arg list
         lArgsToAdd <- list(mCarryCapF=as.matrix(v$cachedTbl))
+        #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
+        
+        #!BEWARE 
+        #For some reason necessary to assign first then globally assigning after
         lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
+        lNamedArgsGrid <<- lNamedArgsGrid
         
         cat("in runGridModel() calling rtPhase5Test with args:",unlist(lNamedArgsGrid))
         
-        v$gridResults <- do.call(rtPhase5Test, lNamedArgsGrid)                
+        v$gridResults <- do.call(rtPhase5Test, lNamedArgsGrid) 
+        
+        #now deparse (conv to text) the first arg (the matrix) for potential pasting by user later
+        #!BEWARE deparse has max width.cutoff of 500, if this is exceeded the var gets put
+        #into multiple elements of a vector and the pasted command doesn't work
+        #default width.cutoff is 60
+        lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl), width.cutoff=500 ))
+        #lArgsToAdd <- list(mCarryCapF=eval(parse(text=deparse(as.matrix(v$cachedTbl)))))
+        lNamedArgsGrid[1] <- lArgsToAdd
+        lNamedArgsGrid <<- lNamedArgsGrid
+        
       }
         
         
@@ -591,23 +606,34 @@ output$printParamsGrid <- renderPrint({
       packageDescription('rtsetse')$Version,
       "\n\n")    
   
-  #Code to repeat this run of the model locally
-  #copied from rtReportPhase2fromShiny
-  sCommand <- "tst <- rtPhase2Test3"
   
-  #todo! see in runGridModel how the function & arguments are changed
-  #if the testSpread button is not selected.
-  #it will be something like :
-  #if ( !input$testSpread ) "tst <- rtPhase2Test5"
-  #but then I also may need to modify the args
-  #not a priority for now because noone but me is running the R code yet
-  #slight issue that when functions start using map files
-  #it's less easy to make the code reproducible
-  #although I might be able to use struct() to pass a copy of the matrix from a file
-  
-  
-  #this creates a vector of 'name=value,'
-  vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")
+  #different function is run if the test spread checkbox is selected
+  if ( input$testSpread )
+  {
+    sCommand <- "tst <- rtPhase2Test3"
+    #this creates a vector of 'name=value,'
+    vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")    
+  } else
+  {
+    sCommand <- "tst <- rtPhase5Test"
+    
+    #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
+    #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
+    
+    #browser()
+    
+    #this creates a vector of 'name=value,'
+    vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ") 
+    #when functions start using map files
+    #it's less easy to make the code reproducible
+    #use dput() to pass a copy of the matrix from a file
+    #ugly but functional
+    #toAdd <- paste0("mCarryCapF=",dput(v$cachedTbl))
+    #vArgs <- paste0(toAdd, ",", vArgs)  
+
+
+  }
+
   #to remove the final comma & space in args list
   vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
   
