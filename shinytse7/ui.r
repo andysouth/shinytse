@@ -380,7 +380,15 @@ shinyUI(
          ) # end mainPanel         
        ) # end pageWithSidebar  
     ) # end tabPanel("spatial model") 
-    ) # end navbarMenu("3 spatial model", testing
+    ), # end navbarMenu("3 spatial model", testing
+
+    # tab "control" ---------------------------
+    tabPanel("4 control",
+             
+             helpText("Not yet implemented.",
+                      " Will allow different control measures to be simulated ITC, AB and SAT."
+                      )
+    ) # end tabPanel("control") 
   ) # end navbarPage   
 ) # end shinyUI
             
