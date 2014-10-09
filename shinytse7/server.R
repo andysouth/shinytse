@@ -293,8 +293,21 @@ readFileConductor <- reactive({
   
   if (is.null(inFile)) return(NULL)
   
-  v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
+  #v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
+
+  #converting to a matrix and modifying dimenions so columns aren't labelled V1 etc
+  #problems with reactivity so trying to load as a local var first
+  mat <- as.matrix( read.table(inFile$datapath, as.is=TRUE) )
+  #sort dimnames that appear in file table
+  #reverse y so that 1 is at lower left
+  #I could use this to make the lables correspond to latlons in future
+  dimnames(mat)[[1]] <- c(nrow(mat):1)
+  dimnames(mat)[[2]] <- c(1:ncol(mat))    
   
+  #set the global var
+  v$cachedTbl <<- mat
+  
+   
   #  v$cachedTbl <<- readTxtChar()
 })
 
