@@ -26,8 +26,10 @@ lNamedArgsAspatial <- NULL #to hold argList for aspatial model
 gridResults <- rtPhase2Test3(nRow=1,nCol=1,iDays=1,report = NULL)
 lNamedArgsGrid <- NULL #to hold argList for grid model  
 
-shinyServer(function(input, output) {
-
+#shinyServer(function(input, output) {
+#10/10/14 adding session arg for progress bar experiments
+shinyServer(function(input, output, session) {
+  
   #I only want to run model when a button is pressed
   
   #v <- reactiveValues( output=output ) 
@@ -470,6 +472,17 @@ output$plotLoadedMap <- renderPlot({
     #8/10/14 trying adding a dependency on new action button
     #input$actionGridModel
     
+    #experimenting with progress bar
+    #this is the trickier way of doing via the API
+    #because I may be able to pass the object to external functions
+    progress <- shiny::Progress$new(session, min=1, max=15)
+    on.exit(progress$close())   
+    progress$set(message = 'Calculation in progress')#,
+    #             detail = 'This may take a while...')
+    progress$set(value = 15) #setting progress bar to max just to show it's doing something
+    #ideally I might pass the progress object to the rtsetse functions that are taking the time
+    
+    
     #needed to get plot to react when button is pressed
     runGridModel()
     
@@ -632,6 +645,9 @@ output$printParamsGrid <- renderPrint({
     
     #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
     #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
+    
+    #hack to add parse to the first argument
+    lNamedArgsGrid[1] <- paste0("eval(parse(text=\'",lNamedArgsGrid[1],"\'))")
     
     #browser()
     
