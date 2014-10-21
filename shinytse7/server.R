@@ -335,20 +335,18 @@ output$plotLoadedMap <- renderPlot({
   else readFileConductor() #read from the inputFile if it hasn't been read yet
   #}
   
-  #all these steps do seem to be necessary to convert to a numeric matrix then raster
-  #mapMatrix <- as.matrix(mapDF)
   mapMatrix <- as.matrix(v$cachedTbl)
-  #mapFactor <- as.factor(mapMatrix)
-  #mapNumeric <- as.numeric(mapFactor)
-  #mapMatrixNumeric <- matrix(mapNumeric,nrow=nrow(mapMatrix))
-  #mapRaster <- raster(mapMatrixNumeric)
-  mapRaster <- raster(mapMatrix)  
   
-  #set extents for plotting (otherwise they go from 0-1)
-  #this also ensures that cells maintain square aspect ratio 
-  extent(mapRaster) <- extent(c(0, ncol(mapRaster), 0, nrow(mapRaster)))
-  
-  plot(mapRaster)    
+  rtPlotMapVeg(mapMatrix)
+    
+#   #old way
+#   #all these steps do seem to be necessary to convert to a numeric matrix then raster
+#   mapMatrix <- as.matrix(v$cachedTbl)
+#   mapRaster <- raster(mapMatrix)    
+#   #set extents for plotting (otherwise they go from 0-1)
+#   #this also ensures that cells maintain square aspect ratio 
+#   extent(mapRaster) <- extent(c(0, ncol(mapRaster), 0, nrow(mapRaster))) 
+#   plot(mapRaster)    
   
 }) #end of plotLoadedMap  
 
