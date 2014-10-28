@@ -40,7 +40,9 @@ shinyServer(function(input, output, session) {
   
   #load an example CC map to start
   #inFile <- "mapVeg50Text.txt" 
-  inFile <- "exampleCCmap4x4.txt"
+  #inFile <- "exampleCCmap4x4.txt"
+  #now needs to be a character, changed to one of the veg maps
+  inFile <- "vegUgandaSETorr1km.txt"
   v$cachedTbl <- read.table(inFile, as.is=TRUE)  
   
   # run mortality seeking  ##########################
@@ -313,6 +315,48 @@ readFileConductor <- reactive({
   #  v$cachedTbl <<- readTxtChar()
 })
 
+### plot raster from a loaded text matrix of characters -----
+output$plotLoadedMap <- renderPlot({
+  
+  if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
+  #else v$cachedTbl <<- readTxtChar() #read from the inputFile
+  else readFileConductor() #read from the inputFile if it hasn't been read yet
+  #}
+  
+  mapMatrix <- as.matrix(v$cachedTbl)
+  
+  rtPlotMapVeg(mapMatrix, cex=1.2)
+  
+  
+  #old way
+  #all these steps do seem to be necessary to convert to a numeric matrix then raster
+  #mapMatrix <- as.matrix(v$cachedTbl)
+  #mapRaster <- raster(mapMatrix)    
+  #set extents for plotting (otherwise they go from 0-1)
+  #this also ensures that cells maintain square aspect ratio 
+  #extent(mapRaster) <- extent(c(0, ncol(mapRaster), 0, nrow(mapRaster))) 
+  #   plot(mapRaster)    
+  
+  #will spplot work with shiny ? YES
+  #spplot(mapRaster)
+    
+}) #end of plotLoadedMap  
+
+
+# table of Vegetation categories -----
+# to allow user to edit attributes of vegetation categories
+output$tableVegCats <- renderTable({
+  
+  #create a test dataframe
+  dF <- data.frame( code = c("D","T"),
+                    name = c("Dense Forest","Thicket"),
+                    mortality = c(100,200)
+                    )
+  dF
+  
+}) #end of tableVegCats 
+
+
 # table of inFile (not editable) -----
 output$tableNonEdit <- renderTable({
   
@@ -326,29 +370,6 @@ output$tableNonEdit <- renderTable({
   v$cachedTbl
   
 }) #end of tableNonEdit 
-
-### plot raster from a loaded text matrix of characters ###
-output$plotLoadedMap <- renderPlot({
-   
-  if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
-  #else v$cachedTbl <<- readTxtChar() #read from the inputFile
-  else readFileConductor() #read from the inputFile if it hasn't been read yet
-  #}
-  
-  mapMatrix <- as.matrix(v$cachedTbl)
-  
-  rtPlotMapVeg(mapMatrix)
-    
-#   #old way
-#   #all these steps do seem to be necessary to convert to a numeric matrix then raster
-#   mapMatrix <- as.matrix(v$cachedTbl)
-#   mapRaster <- raster(mapMatrix)    
-#   #set extents for plotting (otherwise they go from 0-1)
-#   #this also ensures that cells maintain square aspect ratio 
-#   extent(mapRaster) <- extent(c(0, ncol(mapRaster), 0, nrow(mapRaster))) 
-#   plot(mapRaster)    
-  
-}) #end of plotLoadedMap  
 
 
 ## FUNCTIONS used by simple grid tab   ###############################
