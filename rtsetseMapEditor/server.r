@@ -34,8 +34,8 @@ shinyServer(function(input, output) {
 #     plot(rast) 
 #   }) #end of plotAsc
 
-  ####################################################
-  #a conductor to read in the input file
+  
+  #read in the input file ####################################################
   readFileConductor <- reactive({ 
     
     inFile <- input$layer
@@ -68,8 +68,7 @@ shinyServer(function(input, output) {
 #   } #end of readTxtChar  
 
 
-  ################################################
-  ### plot raster from a loaded text matrix of characters ###
+  ### plot raster from loaded text matrix of characters ######
   output$plotTxtChar <- renderPlot({
   
     #making sure of dependency
@@ -110,8 +109,7 @@ shinyServer(function(input, output) {
   
   
   
-  ###############################
-  # table (not editable) of output results
+  # table (not editable) of output results ###############
   output$tableTxtChar <- renderTable({
    
 #     mapDF <- readTxtChar()
@@ -121,8 +119,7 @@ shinyServer(function(input, output) {
   }) #end of tableTxtChar      
 
 
-  #################################
-  # plot an editable table ########
+  # plot an editable table ######################
   output$tbl <- renderHtable({
   
     #browser()
@@ -159,8 +156,8 @@ shinyServer(function(input, output) {
     v$cachedTbl
   }) #end of output$tbl  
 
-###########################################
-# to save file
+
+# save file ###########################################
 output$saveFile <- downloadHandler(
   
   filename = 'modifiedMap.txt',
@@ -171,7 +168,7 @@ output$saveFile <- downloadHandler(
   
   ) #end of output$saveFile
 
-#######################
+
 # to load example data
 # BUT it doesn't get triggered ????
 # loadExData <- reactive( {  
@@ -201,7 +198,7 @@ output$saveFile <- downloadHandler(
 # }) #end of load ex data if a reactive
 # #} #end of load ex data if a func
 
-#####################################
+
 ## this is just to test the loadExData button
 ## this works where the previous one doesn't
 # output$testButton <- renderText({
