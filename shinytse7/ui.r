@@ -14,6 +14,8 @@
 
 library(shiny)
 library(markdown)
+library(shinyTable) #for htable editable tables
+
 
 # Define UI 
 shinyUI(
@@ -261,13 +263,28 @@ shinyUI(
         
         sidebarPanel(
         
-          fileInput('fileMap', 'Choose a map text file', multiple=FALSE)
+          #this allows searching for local files
+          fileInput('fileMap', 'Choose a map text file', multiple=FALSE),
           
-          #, accept='.asc')
+          #this allows searching for files stored in the app
+          selectInput(inputId = 'fileMap',
+                      label = "Choose an internal map",
+                      choices = list.files('.','veg') ),
+                      #choices = getStoredMapNames()),
           
-          #actionButton('loadExDataButton', 'Load example data'),
-          #br(),
-          #downloadButton('saveFile', 'save modified file')
+                  
+          #EDItable of vegetation attributes         
+          htable("editableRasterAtts", colHeaders="provided"),
+          
+          submitButton("apply table edits"),
+          
+          #just for testing now
+          #static table of vegetation attributes         
+          tableOutput("tableRasterAtts")
+          
+
+          
+
         ), # end sidebarPanel
       
       mainPanel(       

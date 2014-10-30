@@ -36,7 +36,8 @@ shinyServer(function(input, output, session) {
   v <- reactiveValues( bestMorts=bestMorts,
                        aspatialResults=aspatialResults,
                        gridResults=gridResults,
-                       cachedTbl = NULL ) 
+                       cachedTbl = NULL, 
+                       dfRasterAtts = NULL) 
   
   #load an example CC map to start
   #inFile <- "mapVeg50Text.txt" 
@@ -44,6 +45,12 @@ shinyServer(function(input, output, session) {
   #now needs to be a character, changed to one of the veg maps
   inFile <- "vegUgandaSETorr1km.txt"
   v$cachedTbl <- read.table(inFile, as.is=TRUE)  
+  
+  
+  v$dfRasterAtts <- data.frame( code = c("D","T","O"), 
+                              name = c("Dense Forest","Thicket","Open Forest"),
+                              mortality = c(100,200,300)  )
+  
   
   # run mortality seeking  ##########################
   runMortSeek <- reactive({
@@ -290,18 +297,25 @@ output$plotMortalityM <- renderPlot({
 
 # read input file -----
 readFileConductor <- reactive({ 
+
   
-  inFile <- input$fileMap
+  if (is.null(input$fileMap)) return(NULL)
   
-  cat("in readFileConductor() inFile:",inFile$datapath,"\n")
+  #an internal file will be a character
+  if ( class(input$fileMap )=='character')
+    inFile <- input$fileMap
+  #if a local file it will be a dataframe and need to get datapath
+  else
+    inFile <- input$fileMap$datapath    
   
-  if (is.null(inFile)) return(NULL)
+  cat("in readFileConductor() inFile:",inFile,"\n")
+  
   
   #v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
 
   #converting to a matrix and modifying dimenions so columns aren't labelled V1 etc
   #problems with reactivity so trying to load as a local var first
-  mat <- as.matrix( read.table(inFile$datapath, as.is=TRUE) )
+  mat <- as.matrix( read.table(inFile, as.is=TRUE) )
   #sort dimnames that appear in file table
   #reverse y so that 1 is at lower left
   #I could use this to make the lables correspond to latlons in future
@@ -315,8 +329,22 @@ readFileConductor <- reactive({
   #  v$cachedTbl <<- readTxtChar()
 })
 
+# getStoredMapNames NOT currently used----
+output$getStoredMapNames <- reactive({
+  
+  filenames <- list.files() 
+  #only return text files
+  names(filenames) <- gsub("\\.txt", "", filenames)
+  return(filenames)
+})
+
+
+
 ### plot raster from a loaded text matrix of characters -----
 output$plotLoadedMap <- renderPlot({
+  
+  #browser()
+  #cat("in plotLoadedMap fileMap$datapath=",input$fileMap$datapath)
   
   if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
   #else v$cachedTbl <<- readTxtChar() #read from the inputFile
@@ -343,19 +371,46 @@ output$plotLoadedMap <- renderPlot({
 }) #end of plotLoadedMap  
 
 
-# table of Vegetation categories -----
-# to allow user to edit attributes of vegetation categories
-output$tableVegCats <- renderTable({
+# table of raster attributes (vegetation) -----
+output$tableRasterAtts <- renderTable({
   
   #create a test dataframe
-  dF <- data.frame( code = c("D","T"),
-                    name = c("Dense Forest","Thicket"),
-                    mortality = c(100,200)
-                    )
-  dF
+#   dF <- data.frame( code = c("D","T"),
+#                     name = c("Dense Forest","Thicket"),
+#                     mortality = c(100,200)
+#                     )
+#   dF
   
-}) #end of tableVegCats 
+  cat("in tableRasterAtts\n")
+  
+  v$dfRasterAtts
+  
+}) #end tableRasterAtts 
 
+
+# editable raster attributes ######################
+output$editableRasterAtts <- renderHtable({
+
+  #browser()
+  
+  #if no changes have been made to the table
+  #then how did we get here ?
+  #I might need to check the loaded grid
+  if ( is.null(input$editableRasterAtts) ) {  
+    
+    #readFileConductor()
+    cat("in editableRasterAtts null\n")
+    
+  } else {
+    #save edited table changes 
+    cat("in editableRasterAtts saving changes\n",unlist(input$editableRasterAtts),"\n")
+    v$dfRasterAtts <<- input$editableRasterAtts
+  }
+  
+  v$dfRasterAtts
+  
+}) #end editableRasterAtts 
+  
 
 # table of inFile (not editable) -----
 output$tableNonEdit <- renderTable({
