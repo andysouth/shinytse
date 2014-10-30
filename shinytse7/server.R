@@ -46,16 +46,25 @@ shinyServer(function(input, output, session) {
   inFile <- "vegUgandaSETorr1km.txt"
   v$cachedTbl <- read.table(inFile, as.is=TRUE)  
   
-  
-  v$dfRasterAtts <- data.frame( code = c("D","T","O"), 
-                              name = c("Dense Forest","Thicket","Open Forest"),
-                              mortality = c(100,200,300)  )
+  #vegetation names & mortalities could be read from a file
+  v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
+                              name = c("Dense Forest","Thicket","Open Forest","Savannah","Bush","Grass","No-go area"),
+                              mortality = c(100,200,300,300,300,300,999),
+                              stringsAsFactors = FALSE )
   
   
   # run mortality seeking  ##########################
   runMortSeek <- reactive({
+ 
+    cat("in runMortSeek button=",input$aButtonMortality,"\n")
     
-    cat("in runMortSeek\n") #,input$days,"\n")
+    #changing from a submitButton to an actionButton
+    #add dependency on the button
+    if ( input$aButtonMortality == 0 ) return()
+    #isolate reactivity of other objects
+    isolate({
+    
+    #cat("in runMortSeek\n") #,input$days,"\n")
       
     v$bestMorts <- rtMortalityStableSeek( fMperF = input$fMperF,
                                        iPupDurF = input$iPupDurF,
@@ -87,8 +96,7 @@ shinyServer(function(input, output, session) {
                                        #iStartPupae = input$iStartPupae,   
                                        #iMaxAge = input$iMaxAge,
                                        verbose = FALSE )
-      
-       
+    }) #end isolate            
   }) #end of runMortSeek
 
   
@@ -156,8 +164,14 @@ output$plotMortalityM <- renderPlot({
   # run aspatial model   #######################
   runModel <- reactive({
     
-    #this gets printed in the Code tab
-    #cat("in runModel input$days=",input$days,"\n")
+    cat("in runModel button=",input$aButtonAspatial,"\n")
+    
+    #changing from a submitButton to an actionButton
+    #add dependency on the button
+    if ( input$aButtonAspatial == 0 ) return()
+    #isolate reactivity of other objects
+    isolate({
+      
     
     if ( input$days > 0 )
     {
@@ -210,7 +224,8 @@ output$plotMortalityM <- renderPlot({
       #                                         
       #                                         verbose=FALSE)
       
-    }  
+    } 
+    }) #end isolate 
   })
   
   
@@ -351,10 +366,19 @@ output$plotLoadedMap <- renderPlot({
   else readFileConductor() #read from the inputFile if it hasn't been read yet
   #}
   
+  
+  #changing from a submitButton to an actionButton
+  #add dependency on the button
+  if ( input$aButtonMap < 0 ) return()
+  #isolate reactivity of other objects
+  isolate({
+  
+  
   mapMatrix <- as.matrix(v$cachedTbl)
   
-  rtPlotMapVeg(mapMatrix, cex=1.2)
+  rtPlotMapVeg(mapMatrix, cex=1.2, labels=v$dfRasterAtts$name)
   
+  }) #end isolate 
   
   #old way
   #all these steps do seem to be necessary to convert to a numeric matrix then raster
@@ -434,8 +458,14 @@ output$tableNonEdit <- renderTable({
   # run grid model  ##########################  
   runGridModel <- reactive({
     
-    #8/10/14 trying adding a dependency on new action button
-    #input$actionGridModel
+    cat("in runModel button=",input$aButtonGrid,"\n")
+    
+    #changing from a submitButton to an actionButton
+    #add dependency on the button
+    if ( input$aButtonGrid == 0 ) return()
+    #isolate reactivity of other objects
+    isolate({
+    
     
     #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
     
@@ -535,7 +565,7 @@ output$tableNonEdit <- renderTable({
       
     }
     
-    
+    }) #end isolate     
   }) # end runGridModel 
   
   

@@ -50,7 +50,9 @@ shinyUI(
         # Sidebar for inputs
         sidebarPanel(
       
-          submitButton("Seek Stable Mortality"),
+          #submitButton("Seek Stable Mortality"),
+          #replacing submitButton with actionButton
+          actionButton('aButtonMortality',"Seek Stable Mortality"),
           
           sliderInput("fMperF", 
                       "1 males per female:", 
@@ -184,7 +186,9 @@ shinyUI(
          
          sidebarPanel(
            
-           submitButton("Run Model"),
+           #replaced with actionButton
+           #submitButton("Run Model"),
+           actionButton('aButtonAspatial',"Run Model"),          
            
            sliderInput("days", 
                        "1 Days:", 
@@ -264,7 +268,7 @@ shinyUI(
         sidebarPanel(
         
           #this allows searching for local files
-          fileInput('fileMap', 'Choose a map text file', multiple=FALSE),
+          #fileInput('fileMap', 'Choose a map text file', multiple=FALSE),
           
           #this allows searching for files stored in the app
           selectInput(inputId = 'fileMap',
@@ -276,11 +280,13 @@ shinyUI(
           #EDItable of vegetation attributes         
           htable("editableRasterAtts", colHeaders="provided"),
           
-          submitButton("apply table edits"),
+          #TODO replace with actionButton
+          #submitButton("apply table edits"),
+          actionButton('aButtonMap',"update map")  
           
           #just for testing now
           #static table of vegetation attributes         
-          tableOutput("tableRasterAtts")
+          #tableOutput("tableRasterAtts")
           
 
           
@@ -323,8 +329,9 @@ shinyUI(
          #splitLayout did kind of work to create 2 columns of inputs, maybe come back to
          #splitLayout(
          
-         
-         submitButton("Run Model"),
+         #TODO replace with actionButton
+         #submitButton("Run Model"),
+         actionButton('aButtonGrid',"Run Model"),   
          
          #trying an actionButton instead of the submitButton
          #doesn't trigger model yet : perhaps I need to add dependency in runGridModel
