@@ -271,9 +271,10 @@ shinyUI(
           #fileInput('fileMap', 'Choose a map text file', multiple=FALSE),
           
           #this allows searching for files stored in the app
+          #starting with veg and ending with txt
           selectInput(inputId = 'fileMap',
                       label = "Choose an internal map",
-                      choices = list.files('.','veg') ),
+                      choices = grep(".txt", list.files('.','^veg'),value=TRUE) ),
                       #choices = getStoredMapNames()),
           
                   

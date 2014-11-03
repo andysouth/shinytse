@@ -362,7 +362,6 @@ output$plotLoadedMap <- renderPlot({
   #cat("in plotLoadedMap fileMap$datapath=",input$fileMap$datapath)
   
   if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
-  #else v$cachedTbl <<- readTxtChar() #read from the inputFile
   else readFileConductor() #read from the inputFile if it hasn't been read yet
   #}
   
@@ -372,7 +371,6 @@ output$plotLoadedMap <- renderPlot({
   if ( input$aButtonMap < 0 ) return()
   #isolate reactivity of other objects
   isolate({
-  
   
   mapMatrix <- as.matrix(v$cachedTbl)
   
