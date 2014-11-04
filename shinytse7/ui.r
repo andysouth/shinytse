@@ -368,7 +368,7 @@ shinyUI(
          checkboxInput('testSpread', "Test spread on uniform grid", value = FALSE),
          
          #conditionalPanel so that rows & cols only visible for uniform grid
-         #doesn't respond due to submitButton
+         #previously didn't respond due to submitButton
          #conditionalPanel(
          #   condition = "input.testSpread == true",
            
@@ -408,18 +408,22 @@ shinyUI(
        mainPanel(
          
          tabsetPanel(
-           # viewing outputs -----------------          
-           tabPanel("Maps daily", plotOutput("plotMapDays")),
-           tabPanel("Map final", plotOutput("plotMapFinalDay")),           
-           tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
-           tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
-           #tabPanel("Females by age", plotOutput("plotAgeStructF")),
-           #tabPanel("Males by age", plotOutput("plotAgeStructM")),
-           tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid")),
-           tabPanel("test inputs", textOutput("testInputVals")),
-           tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
-           #tabPanel("test inputs", textOutput("testInputs")),
-           #tabPanel("About", includeMarkdown("about.md"))
+           
+           tabPanel("temporary", helpText("temporarily disabled while we work out how best to do this")) 
+
+#temporary disabling grid model           
+#            # viewing outputs -----------------          
+#            tabPanel("Maps daily", plotOutput("plotMapDays")),
+#            tabPanel("Map final", plotOutput("plotMapFinalDay")),           
+#            tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
+#            tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
+#            #tabPanel("Females by age", plotOutput("plotAgeStructF")),
+#            #tabPanel("Males by age", plotOutput("plotAgeStructM")),
+#            tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid")),
+#            tabPanel("test inputs", textOutput("testInputVals")),
+#            tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
+#            #tabPanel("test inputs", textOutput("testInputs")),
+#            #tabPanel("About", includeMarkdown("about.md"))
            
            ) # end tabsetPanel                 
          ) # end mainPanel         
