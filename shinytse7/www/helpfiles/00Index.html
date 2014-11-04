@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: simulating tsetse fly populations</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> simulating tsetse fly populations
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;rtsetse&rsquo; version 0.0.3</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td width="25%"><a href="rtsetse.html">rtsetse-package</a></td>
+<td>simulating tsetse fly populations</td></tr>
+<tr><td width="25%"><a href="rtAgeing.html">rtAgeing</a></td>
+<td>ageing of adults or pupae</td></tr>
+<tr><td width="25%"><a href="rtAgeingGrid.html">rtAgeingGrid</a></td>
+<td>ageing of adults or pupae in all cells on a passed grid</td></tr>
+<tr><td width="25%"><a href="rtCalcPupaPerSexAge.html">rtCalcPupaPerSexAge</a></td>
+<td>calculating number of pupae in each age and sex class based on carrying capacity</td></tr>
+<tr><td width="25%"><a href="rtDDRogers.html">rtDDRogers</a></td>
+<td>add density dependence to a mortality following Rogers(1990)</td></tr>
+<tr><td width="25%"><a href="rtDDRogersTest.html">rtDDRogersTest</a></td>
+<td>tests Rogers pupal mortality and outputs a plot</td></tr>
+<tr><td width="25%"><a href="rtDDTest.html">rtDDTest</a></td>
+<td>tests density dependence and outputs a plot</td></tr>
+<tr><td width="25%"><a href="rtDensityDependence.html">rtDensityDependence</a></td>
+<td>modifies mortality according to density dependence</td></tr>
+<tr><td width="25%"><a href="rtFeedingGrid.html">rtFeedingGrid</a></td>
+<td>tsetse feeding on a grid</td></tr>
+<tr><td width="25%"><a href="rtFeedingOneHuntPeriod.html">rtFeedingOneHuntPeriod</a></td>
+<td>tsetse feeding for one cell,age,sex and hunt period</td></tr>
+<tr><td width="25%"><a href="rtGetFromGrid.html">rtGetFromGrid</a></td>
+<td>to access population data from the grid of [x,y,sex,age]</td></tr>
+<tr><td width="25%"><a href="rtGetFromRecord.html">rtGetFromRecord</a></td>
+<td>to access population data from a record array [days,x,y,sex,age]</td></tr>
+<tr><td width="25%"><a href="rtLarvalDeposition.html">rtLarvalDeposition</a></td>
+<td>tsetse larval deposition</td></tr>
+<tr><td width="25%"><a href="rtLarvalDepositionGrid.html">rtLarvalDepositionGrid</a></td>
+<td>tsetse larval deposition on a grid</td></tr>
+<tr><td width="25%"><a href="rtMortality.html">rtMortality</a></td>
+<td>tsetse mortality</td></tr>
+<tr><td width="25%"><a href="rtMortalityGrid.html">rtMortalityGrid</a></td>
+<td>tsetse mortality on a grid **in development**</td></tr>
+<tr><td width="25%"><a href="rtMortalityStableSeek.html">rtMortalityStableSeek</a></td>
+<td>seeks day1 mortality rates for F&amp;M that give popn stability</td></tr>
+<tr><td width="25%"><a href="rtMoveIsland.html">rtMoveIsland</a></td>
+<td>movement to cells NESW, island model</td></tr>
+<tr><td width="25%"><a href="rtMoveReflect.html">rtMoveReflect</a></td>
+<td>movement to cells NESW, reflecting boundaries</td></tr>
+<tr><td width="25%"><a href="rtPhase1Test.html">rtPhase1Test</a></td>
+<td>an a-spatial tsetse population simulation, a test of phase1</td></tr>
+<tr><td width="25%"><a href="rtPhase1Test2.html">rtPhase1Test2</a></td>
+<td>an a-spatial tsetse popn simulation, a second test of phase1 with an alternative density dependence mechanism</td></tr>
+<tr><td width="25%"><a href="rtPhase1Test3.html">rtPhase1Test3</a></td>
+<td>an a-spatial tsetse population simulation, a third test of phase1</td></tr>
+<tr><td width="25%"><a href="rtPhase2Test.html">rtPhase2Test</a></td>
+<td>DEPRECATED? first test of grid phase2 only has ageing and movement</td></tr>
+<tr><td width="25%"><a href="rtPhase2Test2.html">rtPhase2Test2</a></td>
+<td>a simple spatial tsetse population simulation, a 2nd test of phase2</td></tr>
+<tr><td width="25%"><a href="rtPhase2Test3.html">rtPhase2Test3</a></td>
+<td>a simple spatial tsetse population simulation, a 3rd test of phase2</td></tr>
+<tr><td width="25%"><a href="rtPhase3Test.html">rtPhase3Test</a></td>
+<td>a test of feeding (phase3) across multiple hunt periods</td></tr>
+<tr><td width="25%"><a href="rtPlotAgeStructure.html">rtPlotAgeStructure</a></td>
+<td>plots age structure over multiple days</td></tr>
+<tr><td width="25%"><a href="rtPlotFeedingOneCycle.html">rtPlotFeedingOneCycle</a></td>
+<td>plots feeding results of one hunger cycle for testing</td></tr>
+<tr><td width="25%"><a href="rtPlotMapPop.html">rtPlotMapPop</a></td>
+<td>plots map(s) of populations</td></tr>
+<tr><td width="25%"><a href="rtPlotMeanAge.html">rtPlotMeanAge</a></td>
+<td>plots mean age of a popn over time</td></tr>
+<tr><td width="25%"><a href="rtPlotMeanAgeGrid.html">rtPlotMeanAgeGrid</a></td>
+<td>plots mean age of M&amp;F over multiple days and grid cells</td></tr>
+<tr><td width="25%"><a href="rtPlotMortRatesByAge.html">rtPlotMortRatesByAge</a></td>
+<td>plotting age specific mortality rates for Tsetse</td></tr>
+<tr><td width="25%"><a href="rtPlotPop.html">rtPlotPop</a></td>
+<td>plots popn over multiple days</td></tr>
+<tr><td width="25%"><a href="rtPlotPopAndPupae.html">rtPlotPopAndPupae</a></td>
+<td>plots popn and pupae over multiple days</td></tr>
+<tr><td width="25%"><a href="rtPlotPopGrid.html">rtPlotPopGrid</a></td>
+<td>plots popn of M&amp;F over multiple days and grid cells</td></tr>
+<tr><td width="25%"><a href="rtPupalAgeing.html">rtPupalAgeing</a></td>
+<td>tsetse pupal ageing</td></tr>
+<tr><td width="25%"><a href="rtPupalEmergence.html">rtPupalEmergence</a></td>
+<td>tsetse pupal emergence</td></tr>
+<tr><td width="25%"><a href="rtPupalEmergenceGrid.html">rtPupalEmergenceGrid</a></td>
+<td>tsetse pupal emergence on a grid</td></tr>
+<tr><td width="25%"><a href="rtPupalMortality.html">rtPupalMortality</a></td>
+<td>tsetse pupal mortality</td></tr>
+<tr><td width="25%"><a href="rtPupalMortalityDD2.html">rtPupalMortalityDD2</a></td>
+<td>tsetse pupal mortality using alternative density dependence mechanism</td></tr>
+<tr><td width="25%"><a href="rtPupalMortalityGrid.html">rtPupalMortalityGrid</a></td>
+<td>tsetse pupal mortality on a GRID</td></tr>
+<tr><td width="25%"><a href="rtPupalMortalityRogers.html">rtPupalMortalityRogers</a></td>
+<td>tsetse pupal mortality following Rogers(1990)</td></tr>
+<tr><td width="25%"><a href="rtPupalMortalityRogersGrid.html">rtPupalMortalityRogersGrid</a></td>
+<td>tsetse pupal mortality on a GRID following Rogers(1990)</td></tr>
+<tr><td width="25%"><a href="rtReportPhase2.html">rtReportPhase2</a></td>
+<td>produces a report for one run NOTE! this is not used by shiny apps they have their own similar code.</td></tr>
+<tr><td width="25%"><a href="rtSetAgeStructure.html">rtSetAgeStructure</a></td>
+<td>setting an age structure, the abundance in each age class</td></tr>
+<tr><td width="25%"><a href="rtSetDepositionRatesByAge.html">rtSetDepositionRatesByAge</a></td>
+<td>DEPRECATED setting age specific density-dependent larval deposition rates for Tsetse</td></tr>
+<tr><td width="25%"><a href="rtSetDepositionRatesByAgeDI.html">rtSetDepositionRatesByAgeDI</a></td>
+<td>setting age specific density-INdependent larval deposition rates for Tsetse</td></tr>
+<tr><td width="25%"><a href="rtSetMortRatesByAge.html">rtSetMortRatesByAge</a></td>
+<td>setting age specific mortality rates for Tsetse</td></tr>
+<tr><td width="25%"><a href="rtsetse.html">rtsetse</a></td>
+<td>simulating tsetse fly populations</td></tr>
+</table>
+</body></html>
