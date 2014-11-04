@@ -308,26 +308,32 @@ output$plotMortalityM <- renderPlot({
 
 ## FUNCTIONS used by file loading tab   ###############################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#these functions came from rtsetseMapEditor
+#these functions originally came from rtsetseMapEditor
 
-# read input file -----
+# read input file, grid .txt and optional attribute .csv -----
 readFileConductor <- reactive({ 
 
+  if ( input$mapLocation=='Local')
+  {
+    if (is.null(input$fileMapLocal)) return(NULL)
+    
+    #if both grid(txt) & att(csv) files are loaded find the index
+    #of which is the txt file
+    indexOfGrid <- grep(".txt",input$fileMapLocal$name)
+    #old way assumed their order
+    #inFile <- input$fileMapLocal$datapath[ nrow(input$fileMapLocal) ]  
+    inFile <- input$fileMapLocal$datapath[ indexOfGrid ]  
+    
+    cat("local grid file name =", input$fileMapLocal$name[ indexOfGrid ], "\n")   
+    
+  } else if ( input$mapLocation=='Internal')  
+  {
+    if (is.null(input$fileMapInternal)) return(NULL)
+    #an internal file will be a character
+    inFile <- input$fileMapInternal
+  }
   
-  if (is.null(input$fileMap)) return(NULL)
-  
-  #an internal file will be a character
-  if ( class(input$fileMap )=='character')
-    inFile <- input$fileMap
-  #if a local file it will be a dataframe and need to get datapath
-  else
-    inFile <- input$fileMap$datapath    
-  
-  cat("in readFileConductor() inFile:",inFile,"\n")
-  
-  
-  #v$cachedTbl <<- read.table(inFile$datapath, as.is=TRUE)
-
+  #working on the grid.txt file  
   #converting to a matrix and modifying dimenions so columns aren't labelled V1 etc
   #problems with reactivity so trying to load as a local var first
   mat <- as.matrix( read.table(inFile, as.is=TRUE) )
@@ -340,18 +346,59 @@ readFileConductor <- reactive({
   #set the global var
   v$cachedTbl <<- mat
   
-   
-  #  v$cachedTbl <<- readTxtChar()
+  
+  ## now check for and load a raster attribute table
+  ## not sure if should be in or outside of this function
+  ## needs to cope with local & internal files
+
+  
+  if ( input$mapLocation=='Internal')
+  {
+    #in this case I can just check for the attribute table as a character
+    #firstly just check for the text replaced with csv
+    inFileAttributes <- sub(".txt",".csv",input$fileMapInternal)    
+  }
+  #if a local file it will be a dataframe and need to get datapath
+  else if ( input$mapLocation=='Local') 
+  {
+    #one row indicates no attribute file
+    if (nrow(input$fileMapLocal) == 1) inFileAttributes <- "no file"
+    else {
+      #this just converts 1to2 or 2to1
+      #the attributes file is the one that the grid file wasn't
+      indexOfAttributes <- ifelse(indexOfGrid==1,2,1)
+      inFileAttributes <- input$fileMapLocal$datapath[indexOfAttributes]  
+      
+      cat("local attr file name =", input$fileMapLocal$name[ indexOfAttributes ], "\n")   
+      
+    }       
+  }
+ 
+  
+  #check if the attributes file exists
+  if( file.exists(inFileAttributes))
+  {
+    #read in the attribute file
+    #note it is a csv file so needs read.csv
+    dfAttributes <- read.csv(inFileAttributes, as.is=TRUE) 
+    
+    #TODO add checking for what's in the file
+    #should be 7 rows with "D","T","O","S","B","G","N"
+    #currently 3 columns code, name, mortality
+    
+    #set table from the file
+    v$dfRasterAtts <<- dfAttributes
+  } else
+  { #if there is no attribute file, set from defaults
+    
+    v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
+                                  name = c("Dense Forest","Thicket","Open Forest","Savannah","Bush","Grass","No-go area"),
+                                  mortality = c(100,100,100,100,100,200,999),
+                                  stringsAsFactors = FALSE )   
+  }
+  
 })
 
-# getStoredMapNames NOT currently used----
-output$getStoredMapNames <- reactive({
-  
-  filenames <- list.files() 
-  #only return text files
-  names(filenames) <- gsub("\\.txt", "", filenames)
-  return(filenames)
-})
 
 
 
@@ -361,7 +408,7 @@ output$plotLoadedMap <- renderPlot({
   #browser()
   #cat("in plotLoadedMap fileMap$datapath=",input$fileMap$datapath)
   
-  if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
+  if( is.null(input$fileMapInternal) & is.null(v$cachedTbl) ) return(NULL)
   else readFileConductor() #read from the inputFile if it hasn't been read yet
   #}
   
@@ -437,7 +484,7 @@ output$editableRasterAtts <- renderHtable({
 # table of inFile (not editable) -----
 output$tableNonEdit <- renderTable({
   
-  if( is.null(input$fileMap) & is.null(v$cachedTbl) ) return(NULL)
+  if( is.null(input$Internal) & is.null(v$cachedTbl) ) return(NULL)
   #else v$cachedTbl <<- readTxtChar() #read from the inputFile
   else readFileConductor() #read from the inputFile if it hasn't been read yet
   #}

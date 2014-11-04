@@ -257,9 +257,14 @@ shinyUI(
      # tab load grid ---------------------------           
      tabPanel("3.1 load grid",
               
-      helpText("Allows loading of a text file containing a grid of carrying capacities to",
-               " be used in the simulation. Currently it starts with an example map and accepts",
-               " tab or space-delimited text files."),
+      helpText("Allows loading of a text file containing a grid of vegetation categories",
+               " be used in the simulation. You can choose from internally saved files",
+               " or space-delimited text files with the codes DTOSBGN and an optional csv file specifying vegetation names.",
+               a(href="helpfiles/helpLoadVegetation.html", "Click here for help",target="_blank")
+               ),
+      
+      #now added onto the helpText instead
+      #a(href="helpfile.html", "Click here for help"), 
       
       pageWithSidebar(        
         #if no headerPanel an error is generated
@@ -267,17 +272,32 @@ shinyUI(
         
         sidebarPanel(
         
-          #this allows searching for local files
-          #fileInput('fileMap', 'Choose a map text file', multiple=FALSE),
+          selectInput(inputId = 'mapLocation',
+                      label = "Where to get map from ?",
+                      choices = c("Internal","Local") ),
           
-          #this allows searching for files stored in the app
-          #starting with veg and ending with txt
-          selectInput(inputId = 'fileMap',
-                      label = "Choose an internal map",
-                      choices = grep(".txt", list.files('.','^veg'),value=TRUE) ),
-                      #choices = getStoredMapNames()),
+          # Only show this for Local
+          conditionalPanel(
+            condition = "input.mapLocation == 'Local'",
+            #this allows searching for local files
+            fileInput('fileMapLocal', 'Choose a grid text file and optional attribute csv', multiple=TRUE) #FALSE)
+            ), #end conditionalPanel
           
-                  
+          # Only show this for internal maps
+          conditionalPanel(
+            condition = "input.mapLocation == 'Internal'",          
+            #this allows searching for files stored in the app
+            #starting with veg and ending with txt
+            selectInput(inputId = 'fileMapInternal',
+                        label = "Choose an internal map",
+                        choices = grep(".txt", list.files('.','^veg'),value=TRUE) )
+            ), #end conditionalPanel          
+          
+          
+          helpText("Vegetation names are defaults or come from",
+                   "an optional csv file.",
+                   "Edit below and press update to change the map legend."),
+          
           #EDItable of vegetation attributes         
           htable("editableRasterAtts", colHeaders="provided"),
           
