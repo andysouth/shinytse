@@ -335,8 +335,22 @@ readFileConductor <- reactive({
   
   #working on the grid.txt file  
   #converting to a matrix and modifying dimenions so columns aren't labelled V1 etc
+  
+  #use this to test if it has a gridAscii header
+  if (scan(inFile,"character",nmax=1,quiet=TRUE)=="ncols")
+  {
+    header <- TRUE
+    skip <- 6 #BEWARE that file has to have full gridascii header
+    #can read the cellsize here
+    
+  } else 
+  {
+    skip <- 0    
+  }
+
+  
   #problems with reactivity so trying to load as a local var first
-  mat <- as.matrix( read.table(inFile, as.is=TRUE) )
+  mat <- as.matrix( read.table(inFile, skip=skip, as.is=TRUE) )
   #sort dimnames that appear in file table
   #reverse y so that 1 is at lower left
   #I could use this to make the lables correspond to latlons in future
@@ -419,9 +433,9 @@ output$plotLoadedMap <- renderPlot({
   #isolate reactivity of other objects
   isolate({
   
-  mapMatrix <- as.matrix(v$cachedTbl)
-  
-  rtPlotMapVeg(mapMatrix, cex=1.2, labels=v$dfRasterAtts$name)
+    mapMatrix <- as.matrix(v$cachedTbl)
+    
+    rtPlotMapVeg(mapMatrix, cex=1.2, labels=v$dfRasterAtts$name)
   
   }) #end isolate 
   
@@ -500,7 +514,7 @@ output$tableNonEdit <- renderTable({
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #these functions came from shinytse4
 
-  # run grid model  ##########################  
+  # RUN grid model  ##########################  
   runGridModel <- reactive({
     
     cat("in runModel button=",input$aButtonGrid,"\n")
@@ -556,28 +570,31 @@ output$tableNonEdit <- renderTable({
         v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
       else
       {
-        #just use those args that are in the arg list for rtPhase5Test
+        #just use those args that are in the arg list for rtPhase5Test2
         #!!BEWARE this is a temporary hack !!
-        lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rtPhase5Test")))]
+        lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rtPhase5Test2")))]
         
-        #add the matrix containing CCs to the arg list
-        lArgsToAdd <- list(mCarryCapF=as.matrix(v$cachedTbl))
-        #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
+        #add the matrix containing the vegetation to the arg list
+        #lArgsToAdd <- list(mCarryCapF=as.matrix(v$cachedTbl))
+        #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))    
+        lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
+                           dfMortByVeg=v$dfRasterAtts)            
         
         #!BEWARE 
         #For some reason necessary to assign first then globally assigning after
         lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
         lNamedArgsGrid <<- lNamedArgsGrid
         
-        cat("in runGridModel() calling rtPhase5Test with args:",unlist(lNamedArgsGrid))
+        cat("in runGridModel() calling rtPhase5Test2 with args:",unlist(lNamedArgsGrid))
         
-        v$gridResults <- do.call(rtPhase5Test, lNamedArgsGrid) 
+        v$gridResults <- do.call(rtPhase5Test2, lNamedArgsGrid) 
         
         #now deparse (conv to text) the first arg (the matrix) for potential pasting by user later
         #!BEWARE deparse has max width.cutoff of 500, if this is exceeded the var gets put
         #into multiple elements of a vector and the pasted command doesn't work
         #default width.cutoff is 60
-        lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl), width.cutoff=500 ))
+        lArgsToAdd <- list(mVegetation=deparse(as.matrix(v$cachedTbl), width.cutoff=500 ),
+                           dfMortByVeg=v$dfRasterAtts )
         #lArgsToAdd <- list(mCarryCapF=eval(parse(text=deparse(as.matrix(v$cachedTbl)))))
         lNamedArgsGrid[1] <- lArgsToAdd
         lNamedArgsGrid <<- lNamedArgsGrid
@@ -790,7 +807,7 @@ output$printParamsGrid <- renderPrint({
     vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")    
   } else
   {
-    sCommand <- "tst <- rtPhase5Test"
+    sCommand <- "tst <- rtPhase5Test2"
     
     #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
     #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
