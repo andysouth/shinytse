@@ -1,3 +1,9 @@
+ncols         50
+nrows         50
+xllcorner     0.0
+yllcorner     0.0
+cellsize      1
+NODATA_value  -9999
 D	D	D	O	O	O	O	O	S	S	S	O	O	O	S	T	G	O	T	T	O	O	O	O	O	O	O	O	O	O	O	O	O	D	D	D	D	O	O	O	O	O	O	O	G	O	O	O	O	O
 O	D	D	T	T	S	S	T	S	S	O	O	O	T	T	O	O	O	O	O	O	O	O	O	O	O	T	T	T	G	G	O	O	O	T	O	O	O	O	O	O	O	O	O	O	O	O	O	T	O
 O	O	D	O	O	S	S	T	O	S	O	O	S	S	O	O	O	O	O	O	G	O	O	O	O	T	T	O	T	T	O	O	O	O	O	O	O	O	G	O	O	O	O	O	O	O	O	O	T	T
