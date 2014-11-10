@@ -250,12 +250,13 @@ shinyUI(
       ) # end pageWithSidebar             
     ), # end tabPanel("a-spatial model") 
     
-    # menu tab "spatial model" ---------------------------
-    # tmp test adding a menu item, that will create dropdown
-    navbarMenu("3 spatial model",
+    # menu tab "spatial model" 
+    # adding a menu item, that will create dropdown
+    #navbarMenu("3 spatial model",
      
      # tab load grid ---------------------------           
-     tabPanel("3.1 load grid",
+     #tabPanel("3.1 load grid",
+     tabPanel("3 load map",
               
       helpText("Allows loading of a text file containing a grid of vegetation categories",
                " be used in the simulation. You can choose from internally saved files",
@@ -330,7 +331,7 @@ shinyUI(
      ), # end tabPanel("load grid")               
      
      # tab run grid model ---------------------------                      
-     tabPanel("3.2 run model on grid",
+     tabPanel("4 run grid model",
              
      helpText("Runs a simple gridded model with a starting population defined by the carrying capacities in the loaded grid.",
               " If you tick 'Test spread' popn is started from single central cell on a uniform grid.",
@@ -350,14 +351,8 @@ shinyUI(
          #splitLayout did kind of work to create 2 columns of inputs, maybe come back to
          #splitLayout(
          
-         #TODO replace with actionButton
-         #submitButton("Run Model"),
+         #submitButton("Run Model"), #replaced with actionButton
          actionButton('aButtonGrid',"Run Model"),   
-         
-         #trying an actionButton instead of the submitButton
-         #doesn't trigger model yet : perhaps I need to add dependency in runGridModel
-         #other submitButton's elsewhere stop conditionalPanel responding
-         #actionButton("actionGridModel","Run Model"),   
          
          #next 2 for report download
          downloadButton('downloadReport',label='download run report'),
@@ -408,31 +403,31 @@ shinyUI(
        mainPanel(
          
          tabsetPanel(
-           
-           tabPanel("temporary", helpText("temporarily disabled while we work out how best to do this")) 
-
-#temporary disabling grid model           
-#            # viewing outputs -----------------          
-#            tabPanel("Maps daily", plotOutput("plotMapDays")),
-#            tabPanel("Map final", plotOutput("plotMapFinalDay")),           
-#            tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
-#            tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
-#            #tabPanel("Females by age", plotOutput("plotAgeStructF")),
-#            #tabPanel("Males by age", plotOutput("plotAgeStructM")),
-#            tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid")),
-#            tabPanel("test inputs", textOutput("testInputVals")),
-#            tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
-#            #tabPanel("test inputs", textOutput("testInputs")),
-#            #tabPanel("About", includeMarkdown("about.md"))
+ 
+           #can use this for temporary disabling grid model   
+           #tabPanel("temporary", helpText("temporarily disabled while we work out how best to do this")) 
+        
+           # viewing outputs -----------------          
+           tabPanel("Maps daily", plotOutput("plotMapDays")),
+           tabPanel("Map final", plotOutput("plotMapFinalDay")),           
+           tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
+           tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
+           #tabPanel("Females by age", plotOutput("plotAgeStructF")),
+           #tabPanel("Males by age", plotOutput("plotAgeStructM")),
+           tabPanel("Mean age adults", plotOutput("plotMeanAgeGrid")),
+           tabPanel("test inputs", textOutput("testInputVals")),
+           tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
+           #tabPanel("test inputs", textOutput("testInputs")),
+           #tabPanel("About", includeMarkdown("about.md"))
            
            ) # end tabsetPanel                 
          ) # end mainPanel         
        ) # end pageWithSidebar  
-    ) # end tabPanel("spatial model") 
-    ), # end navbarMenu("3 spatial model", testing
+    ), # end tabPanel("spatial model") 
+    #), # end navbarMenu("3 spatial model",
 
     # tab "control" ---------------------------
-    tabPanel("4 control",
+    tabPanel("5 control",
              
              helpText("Not yet implemented.",
                       " Will allow different control measures to be simulated ITC, AB and SAT."
