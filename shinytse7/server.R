@@ -522,6 +522,7 @@ output$tableNonEdit <- renderTable({
     #changing from a submitButton to an actionButton
     #add dependency on the button
     if ( input$aButtonGrid == 0 ) return()
+    
     #isolate reactivity of other objects
     isolate({
     
@@ -635,8 +636,8 @@ output$tableNonEdit <- renderTable({
   # plotting pop maps for MF ###############################
   output$plotMapDays <- renderPlot({
     
-    #8/10/14 trying adding a dependency on new action button
-    #input$actionGridModel
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
     #experimenting with progress bar
     #this is the trickier way of doing via the API
@@ -652,20 +653,40 @@ output$tableNonEdit <- renderTable({
     #needed to get plot to react when button is pressed
     runGridModel()
     
-    cat("in plotMapDays input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in plotMapDays input$daysGridModel=",input$daysGridModel,"\n")
     
     rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='MF')
   })  
   
-  
+  # message to prompt user to press run --------------
+  #options for renderType are 'plot' 'print' and 'text'
+  msgRunPrompt <- function( renderType="plot", ... )
+  {
+    #... allows other mtext params to be passed
+    msg <- "press the 'Run Model' button to see output here"
+    
+    if (renderType=="plot")
+      mtext(msg, col='blue', ...)
+    else if (renderType=="print")
+      cat(msg)
+    else #text
+      msg
+  }
+
+
   # plotting pop maps for F ###############################
   # (not used currently)
   output$plotMapDaysF <- renderPlot({
     
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
     #needed to get plot to react when button is pressed
     runGridModel()
     
-    cat("in plotMapDaysF input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in plotMapDaysF input$daysGridModel=",input$daysGridModel,"\n")
     
     rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='F')
   })  
@@ -674,10 +695,14 @@ output$tableNonEdit <- renderTable({
   # plot pop map for final day ###############################
   output$plotMapFinalDay <- renderPlot({
     
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
     #needed to get plot to react when button is pressed
     runGridModel()
     
-    cat("in plotMapFinalDay input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in plotMapFinalDay input$daysGridModel=",input$daysGridModel,"\n")
     
     rtPlotMapPop(v$gridResults, days='final', sex='MF')
     
@@ -687,11 +712,14 @@ output$tableNonEdit <- renderTable({
   # plot adult popn & M&F for whole grid ###############################
   output$plotPopGrid <- renderPlot({
     
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
     #needed to get plot to react when button is pressed
-    #i'm not quite sure why, i thought it might react to v changing
     runGridModel()
     
-    cat("in plotPopGrid input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in plotPopGrid input$daysGridModel=",input$daysGridModel,"\n")
     
     rtPlotPopGrid(v$gridResults,"Adults") 
     #print( rtPlotPopGrid(v$gridResults,"Adult Flies") )
@@ -703,9 +731,13 @@ output$tableNonEdit <- renderTable({
   # plot mean age of adults ###############################
   output$plotMeanAgeGrid <- renderPlot({
     
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
     runGridModel()
     
-    cat("in plotMeanAgeGrid input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in plotMeanAgeGrid input$daysGridModel=",input$daysGridModel,"\n")
     
     rtPlotMeanAgeGrid(v$gridResults)
     
@@ -760,10 +792,14 @@ output$tableNonEdit <- renderTable({
   #not currently used
   output$testInputs <- renderText({
     
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
     #needed to get plot to react when button is pressed
     runGridModel()
     
-    cat("in testInputs() input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in testInputs() input$daysGridModel=",input$daysGridModel,"\n")
     
     #this gets all of the reactive values
     #problem with that is that not all of them apply to the grid model
@@ -779,10 +815,14 @@ output$tableNonEdit <- renderTable({
   # plot age struct summed M&F whole grid ###############################
   output$plotAgeStructGrid <- renderPlot({
     
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
     #needed to get plot to react when button is pressed
     runGridModel()
     
-    cat("in plotAgeStructGrid input$daysGridModel=",input$daysGridModel,"\n")
+    #with this in a display refresh is triggered when days are changed
+    #cat("in plotAgeStructGrid input$daysGridModel=",input$daysGridModel,"\n")
     
     rtPlotAgeStructure(v$gridResults,"M & F summed for whole grid")
     
@@ -791,8 +831,11 @@ output$tableNonEdit <- renderTable({
 # print params used in simple grid model ###############################
 output$printParamsGrid <- renderPrint({
   
+  #only try to display results after the run button has been pressed for the first time
+  if ( input$aButtonGrid == 0 ) return( msgRunPrompt(renderType="print") )
+  
   #needed to get plot to react when button is pressed
-  runGridModel()
+  #runGridModel()
   
   cat("R code to repeat this run of the model locally using rtsetse version",
       packageDescription('rtsetse')$Version,
@@ -841,6 +884,9 @@ output$printParamsGrid <- renderPrint({
 # display values of input for testing ###############################
 output$testInputVals <- renderText({
 
+  #only try to display results after the run button has been pressed for the first time
+  if ( input$aButtonGrid == 0 ) return( msgRunPrompt(renderType="text") )
+  
   #needed to get plot to react when button is pressed
   runGridModel()
   
