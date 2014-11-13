@@ -333,29 +333,10 @@ readFileConductor <- reactive({
     inFile <- input$fileMapInternal
   }
   
-  #working on the grid.txt file  
-  #converting to a matrix and modifying dimenions so columns aren't labelled V1 etc
-  
-  #use this to test if it has a gridAscii header
-  if (scan(inFile,"character",nmax=1,quiet=TRUE)=="ncols")
-  {
-    header <- TRUE
-    skip <- 6 #BEWARE that file has to have full gridascii header
-    #can read the cellsize here
-    
-  } else 
-  {
-    skip <- 0    
-  }
-
-  
-  #problems with reactivity so trying to load as a local var first
-  mat <- as.matrix( read.table(inFile, skip=skip, as.is=TRUE) )
-  #sort dimnames that appear in file table
-  #reverse y so that 1 is at lower left
-  #I could use this to make the lables correspond to latlons in future
-  dimnames(mat)[[1]] <- c(nrow(mat):1)
-  dimnames(mat)[[2]] <- c(1:ncol(mat))    
+  #reading in the grid.txt file as a character matrix
+  #I may want to read in as a raster later so I can capture
+  #cellsize and corner coords
+  mat <- rtReadMapVeg(inFile) 
   
   #set the global var
   v$cachedTbl <<- mat
@@ -575,15 +556,16 @@ output$tableNonEdit <- renderTable({
         #!!BEWARE this is a temporary hack !!
         lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rtPhase5Test2")))]
         
-        #add the matrix containing the vegetation to the arg list
-        #lArgsToAdd <- list(mCarryCapF=as.matrix(v$cachedTbl))
-        #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))    
+        #add the matrix containing the vegetation to the arg list 
         lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
-                           dfMortByVeg=v$dfRasterAtts)            
+                           dfMortByVeg=v$dfRasterAtts) 
+        
+        #could try to use the filenames instead of the matrix ?
         
         #!BEWARE 
         #For some reason necessary to assign first then globally assigning after
-        lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
+        #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
+        lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) #swapped
         lNamedArgsGrid <<- lNamedArgsGrid
         
         cat("in runGridModel() calling rtPhase5Test2 with args:",unlist(lNamedArgsGrid))
@@ -594,11 +576,10 @@ output$tableNonEdit <- renderTable({
         #!BEWARE deparse has max width.cutoff of 500, if this is exceeded the var gets put
         #into multiple elements of a vector and the pasted command doesn't work
         #default width.cutoff is 60
-        lArgsToAdd <- list(mVegetation=deparse(as.matrix(v$cachedTbl), width.cutoff=500 ),
-                           dfMortByVeg=v$dfRasterAtts )
-        #lArgsToAdd <- list(mCarryCapF=eval(parse(text=deparse(as.matrix(v$cachedTbl)))))
-        lNamedArgsGrid[1] <- lArgsToAdd
-        lNamedArgsGrid <<- lNamedArgsGrid
+#         lArgsToAdd <- list(mVegetation=deparse(as.matrix(v$cachedTbl), width.cutoff=500 ),
+#                            dfMortByVeg=v$dfRasterAtts )
+#         lNamedArgsGrid[1] <- lArgsToAdd
+#         lNamedArgsGrid <<- lNamedArgsGrid
         
       }
         
