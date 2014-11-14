@@ -330,7 +330,11 @@ readFileConductor <- reactive({
   {
     if (is.null(input$fileMapInternal)) return(NULL)
     #an internal file will be a character
-    inFile <- input$fileMapInternal
+    #inFile <- input$fileMapInternal
+    #now that it is getting the file from the rtsetse package
+    #ugly but does work BEWARE repeated below for attribute file
+    inFile <- paste0( 'system.file("extdata","',input$fileMapInternal,'", package="rtsetse")')
+    inFile <- eval(parse(text=inFile))
   }
   
   #reading in the grid.txt file as a character matrix
@@ -351,7 +355,10 @@ readFileConductor <- reactive({
   {
     #in this case I can just check for the attribute table as a character
     #firstly just check for the text replaced with csv
-    inFileAttributes <- sub(".txt",".csv",input$fileMapInternal)    
+    inFileAttributes <- sub(".txt",".csv",input$fileMapInternal)  
+    #ugly but does work BEWARE repeated above for grid file
+    inFileAttributes <- paste0( 'system.file("extdata","',inFileAttributes,'", package="rtsetse")')
+    inFileAttributes <- eval(parse(text=inFileAttributes)) 
   }
   #if a local file it will be a dataframe and need to get datapath
   else if ( input$mapLocation=='Local') 
@@ -560,7 +567,10 @@ output$tableNonEdit <- renderTable({
         lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
                            dfMortByVeg=v$dfRasterAtts) 
         
-        #could try to use the filenames instead of the matrix ?
+        #Shiny reads in the map file to a matrix to display it.
+        #I don't then really want to pass the filename to rtsetse to make it read it in again.
+        #But I do want to put the filename into the code tab, to make the code reproducible 
+     
         
         #!BEWARE 
         #For some reason necessary to assign first then globally assigning after
@@ -835,11 +845,27 @@ output$printParamsGrid <- renderPrint({
     
     #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
     #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
-    
     #hack to add parse to the first argument
-    lNamedArgsGrid[1] <- paste0("eval(parse(text=\'",lNamedArgsGrid[1],"\'))")
+    #lNamedArgsGrid[1] <- paste0("eval(parse(text=\'",lNamedArgsGrid[1],"\'))")
     
     #browser()
+    
+    #I didn't manage to get the matrix into a reproducible string
+    #could try to use the filenames instead
+    if (input$mapLocation == 'Local')
+    {  
+      lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapLocal$name,'"')
+    }
+    else if (input$mapLocation == 'Internal')
+    {
+      #lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapInternal,'"')
+      #TODO this code is repeated from above
+      inFile <- paste0( 'system.file("extdata","',input$fileMapInternal,'", package="rtsetse")')
+      lNamedArgsGrid$mVegetation <- inFile
+    }
+
+    #dfMortByVeg= )    
+    
     
     #this creates a vector of 'name=value,'
     vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ") 

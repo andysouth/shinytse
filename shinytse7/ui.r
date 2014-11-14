@@ -291,7 +291,11 @@ shinyUI(
             #starting with veg and ending with txt
             selectInput(inputId = 'fileMapInternal',
                         label = "Choose an internal map",
-                        choices = grep(".txt", list.files('.','^veg'),value=TRUE) )
+                        #choices = grep(".txt", list.files('.','^veg'),value=TRUE) )
+                        #can I instead get at files from rtsetse ?
+                        #should probably do this in server file
+                        choices = grep(".txt", list.files(system.file("extdata", package="rtsetse"),'^veg'),value=TRUE) )
+          
             ), #end conditionalPanel          
           
           
