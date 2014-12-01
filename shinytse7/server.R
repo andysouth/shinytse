@@ -855,6 +855,11 @@ output$printParamsGrid <- renderPrint({
     if (input$mapLocation == 'Local')
     {  
       lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapLocal$name,'"')
+      
+      cat("As you are using a local vegetation file you will first need to use setwd() ",
+          "to set your working directory to the location of the files.",
+          "\n\n")  
+      
     }
     else if (input$mapLocation == 'Internal')
     {
