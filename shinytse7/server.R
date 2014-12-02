@@ -39,12 +39,12 @@ shinyServer(function(input, output, session) {
                        cachedTbl = NULL, 
                        dfRasterAtts = NULL) 
   
-  #load an example CC map to start
-  #inFile <- "mapVeg50Text.txt" 
-  #inFile <- "exampleCCmap4x4.txt"
-  #now needs to be a character, changed to one of the veg maps
-  inFile <- "vegUgandaSETorr1km.txt"
-  v$cachedTbl <- read.table(inFile, as.is=TRUE)  
+  #load an example veg map to start
+  #inFile <- "vegUgandaSETorr1km.txt"
+  #v$cachedTbl <- read.table(inFile, as.is=TRUE)  
+  #1/12/14 do I need the above ? can I set it to NULL to start
+  v$cachedTbl <- NULL    
+  
   
   #vegetation names & mortalities could be read from a file
   v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
