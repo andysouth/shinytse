@@ -527,6 +527,9 @@ output$tableNonEdit <- renderTable({
       pMortM <- v$bestMorts$M
       
       #put args into a global list (<<-) so they can also be printed elsewhere
+      #!BEWARE have to make sure that these match the argnames for rtPhase5Test2
+      #!otherwise they get missed out when the code string is produced 
+      #!and the default values will be used
       lNamedArgsGrid <<- list(
                               #nRow = input$nRow,
                               #nCol = input$nCol,
@@ -536,7 +539,7 @@ output$tableNonEdit <- renderTable({
                               pMortM = pMortM, 
                               pMortPupa = input$pMortPupa,
                               fStartPopPropCC = input$fStartPopPropCC,
-                              iCarryCap = input$iCarryCap,
+                              iCarryCapF = input$iCarryCapF,
                               #iStartAges = input$iStartAges,
                               #iStartAdults = input$iStartAdults )    
                               propMortAdultDD = input$propMortAdultDD,
