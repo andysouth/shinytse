@@ -196,7 +196,7 @@ shinyUI(
                        max = 1000, 
                        value = 100),
            
-           sliderInput("iCarryCap", 
+           sliderInput("iCarryCapF", 
                        "2 Carrying Capacity Females:", 
                        min = 100,
                        max = 10000,
