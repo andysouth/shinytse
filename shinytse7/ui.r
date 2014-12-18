@@ -18,7 +18,7 @@ library(shinyTable) #for htable editable tables
 
 
 # Define UI 
-shinyUI(
+shinyUI(fluidPage(
   
   #this didn't work to put text above the navbar
   #helpText("Test..."),
@@ -40,12 +40,12 @@ shinyUI(
       helpText("Set population parameters on the left and press the seek button to find",
                " values of adult mortality that generate a stable population."),
              
-      pageWithSidebar(
+      sidebarLayout(
         
         #title for this page
         #headerPanel("shinytse7 - seeking stability"),
         #if no headerPanel an error is generated
-        headerPanel(""),
+        #headerPanel(""),
         
         # Sidebar for inputs
         sidebarPanel(
@@ -177,12 +177,12 @@ shinyUI(
                " Copy from the Code tab on the right to repeat this run locally in R."
                ),
              
-      pageWithSidebar(
+      sidebarLayout(
          
          #title for this page
          #headerPanel("shinytse7 - seeking stability"),
          #if no headerPanel an error is generated
-         headerPanel(""),
+         #headerPanel(""),
          
          sidebarPanel(
            
@@ -267,9 +267,9 @@ shinyUI(
       #now added onto the helpText instead
       #a(href="helpfile.html", "Click here for help"), 
       
-      pageWithSidebar(        
+      sidebarLayout(        
         #if no headerPanel an error is generated
-        headerPanel(""),
+        #headerPanel(""),
         
         #setting width to make space for table
         #sidebarPanel( width=10,
@@ -348,10 +348,10 @@ shinyUI(
               " the code to repeat this run locally in R."
               ),
      
-     pageWithSidebar(
+     sidebarLayout(
        
        #if no headerPanel an error is generated
-       headerPanel(""),
+       #headerPanel(""),
      
        sidebarPanel(
          
@@ -440,7 +440,8 @@ shinyUI(
                       " Will allow different control measures to be simulated ITC, AB and SAT."
                       )
     ) # end tabPanel("control") 
-  ) # end navbarPage   
+  ) # end navbarPage  
+) # end fluidPage
 ) # end shinyUI
             
 
