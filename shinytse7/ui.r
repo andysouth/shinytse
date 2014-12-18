@@ -271,6 +271,8 @@ shinyUI(
         #if no headerPanel an error is generated
         headerPanel(""),
         
+        #setting width to make space for table
+        #sidebarPanel( width=10,
         sidebarPanel(
         
           selectInput(inputId = 'mapLocation',
@@ -304,10 +306,11 @@ shinyUI(
                    "Edit below and press update to change the map legend."),
           
           #EDItable of vegetation attributes         
-          htable("editableRasterAtts", colHeaders="provided"),
+          #!BEWARE that the num & name of columns gets set by the first 
+          #file loaded, if later files have more columns the data are not shown
+          htable("editableRasterAtts", colHeaders="provided"), 
           
-          #TODO replace with actionButton
-          #submitButton("apply table edits"),
+          
           actionButton('aButtonMap',"update map")  
           
           #just for testing now
