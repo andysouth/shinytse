@@ -49,7 +49,8 @@ shinyServer(function(input, output, session) {
   #vegetation names & mortalities could be read from a file
   v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
                               name = c("Dense Forest","Thicket","Open Forest","Savannah","Bush","Grass","No-go area"),
-                              mortality = c(100,200,300,300,300,300,999),
+                              mortality = c(100,100,100,100,100,100,999),
+                              pupmortality = c(100,100,100,100,100,100,999),
                               stringsAsFactors = FALSE )
   
   
@@ -392,10 +393,12 @@ readFileConductor <- reactive({
     v$dfRasterAtts <<- dfAttributes
   } else
   { #if there is no attribute file, set from defaults
+    warning("no raster attribute(.csv) file, setting default values")
     
     v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
                                   name = c("Dense Forest","Thicket","Open Forest","Savannah","Bush","Grass","No-go area"),
-                                  mortality = c(100,100,100,100,100,200,999),
+                                  mortality = c(100,100,100,100,100,100,999),
+                                  pupmortality = c(100,100,100,100,100,100,999),
                                   stringsAsFactors = FALSE )   
   }
   
@@ -465,14 +468,20 @@ output$editableRasterAtts <- renderHtable({
   #browser()
   
   #if no changes have been made to the table
-  #then how did we get here ?
-  #I might need to check the loaded grid
-  if ( is.null(input$editableRasterAtts) ) {  
-    
-    #readFileConductor()
-    cat("in editableRasterAtts null\n")
-    
-  } else {
+  #we might get here if a new file has been loaded
+#   if ( is.null(input$editableRasterAtts) ) {  
+#     
+#     cat("in editableRasterAtts null\n")
+#     
+#   } else {
+#     #save edited table changes 
+#     cat("in editableRasterAtts saving changes\n",unlist(input$editableRasterAtts),"\n")
+#     v$dfRasterAtts <<- input$editableRasterAtts
+#   }
+
+  #if the table has been changed from the UI, save those changes
+  if ( !is.null(input$editableRasterAtts) ) {  
+
     #save edited table changes 
     cat("in editableRasterAtts saving changes\n",unlist(input$editableRasterAtts),"\n")
     v$dfRasterAtts <<- input$editableRasterAtts
