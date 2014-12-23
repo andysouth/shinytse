@@ -25,6 +25,7 @@ aspatialResults <- rt_runAspatial(iDays=1, verbose=FALSE)
 lNamedArgsAspatial <- NULL #to hold argList for aspatial model  
 gridResults <- rt_runGridTestSpread(nRow=1,nCol=1,iDays=1,report = NULL)
 lNamedArgsGrid <- NULL #to hold argList for grid model  
+stringCodeRepeat <- NULL # to hold the actual function call for the grid model, e.g. with filename for the veg matrix
 
 #shinyServer(function(input, output) {
 #10/10/14 adding session arg for progress bar experiments
@@ -831,7 +832,7 @@ output$tableNonEdit <- renderTable({
     
   })  
 
-# print params used in simple grid model ###############################
+# print reproducible code for grid model ###############################
 output$printParamsGrid <- renderPrint({
   
   #only try to display results after the run button has been pressed for the first time
@@ -899,8 +900,12 @@ output$printParamsGrid <- renderPrint({
   #to remove the final comma & space in args list
   vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
   
-  cat( sCommand,"( ",vArgs," )",sep="")
-  
+  #cat( sCommand,"( ",vArgs," )",sep="")
+  #23/12/14 put this into a global string so I can put it into the run report as well
+  stringCodeRepeat <<- c( sCommand,"( ",vArgs," )")
+  #this outputs it to the code tab
+  cat( stringCodeRepeat )
+    
   cat( "\n\n#to plot some results \nrtPlotMapPop(tst)" )
   
 })    

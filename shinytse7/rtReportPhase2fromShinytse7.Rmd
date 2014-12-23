@@ -1,5 +1,5 @@
 ---
-title: "Report on rtsetse phase2 testing"
+title: "Report on rtsetse grid model output"
 output: html_document
 date: "`r format(Sys.time(), '%d %B, %Y, %H:%M')`"
 ---
@@ -8,12 +8,16 @@ This is a report on the outputs produced from one run of a phase 2 test of the r
 
 See end of the document for the rtsetse code to repeat this run of the model locally.
 
-Parameter values used in this run :
+
 ```{r print args, echo=FALSE}
-#the arguments and their values passed to rtPhase2Test3
-#17/9/14 trying to reimplement this 
-#yes it works
-print(unlist(lNamedArgsGrid))
+#removed this because of trickiness in getting the vegetation matrix not to print out
+#Parameter values used in this run :
+
+#the arguments and their values passed to rtsetse function
+#17/9/14 trying to reimplement this, yes it works
+#23/12/14 problem with veg matrix which comes out as long matrix
+#print(unlist(lNamedArgsGrid))
+
 
 #old approach getting list of inputs from Shiny
 #but that was a problem once I had multiple navbar tabs
@@ -26,7 +30,6 @@ print(unlist(lNamedArgsGrid))
 # lNamedArgsSub <- lNamedArgsSub[ order(names(lNamedArgsSub)) ]
 # #to stop it from using sci notation
 # print(unlist(format(lNamedArgsSub,scientific=FALSE)))
-
 ```
 
 **Figure 1** Adult population over time summed for the whole grid.
@@ -64,12 +67,22 @@ rtPlotMeanAgeGrid(v$gridResults)
 
 Code to repeat this run of the model locally :
 ```{r Code for local run, echo=FALSE}
-sCommand <- "rt_runGridTestSpread"
-#this creates a vector of 'name=value,'
-vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")
-#to remove the final comma & space in args list
-vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
 
-cat( sCommand,"( ",vArgs," )",sep="")
-#cat("\n changed \n")
+# string is created in server.r/printParamsGrid
+#BEWARE!
+#23/12/14 does work if the code tab is selected first, but not yet if not
+#i may be able to move the code that creates the string into a function
+#that is called from runGridModel()
+cat(stringCodeRepeat,"\n")
+
+#cat("the code should be above this ...")
+
+# old way of doing had problems with the veg matrix
+# sCommand <- "rt_runGridTestSpread"
+# #this creates a vector of 'name=value,'
+# vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")
+# #to remove the final comma & space in args list
+# vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
+# cat( sCommand,"( ",vArgs," )",sep="")
+
 ```
