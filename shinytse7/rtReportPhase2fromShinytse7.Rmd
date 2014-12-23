@@ -64,7 +64,7 @@ rtPlotMeanAgeGrid(v$gridResults)
 
 Code to repeat this run of the model locally :
 ```{r Code for local run, echo=FALSE}
-sCommand <- "rtPhase2Test3"
+sCommand <- "rt_runGridTestSpread"
 #this creates a vector of 'name=value,'
 vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")
 #to remove the final comma & space in args list

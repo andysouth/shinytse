@@ -21,9 +21,9 @@ library(raster)
 #run the model once just one day before start to set up output structure
 #output <- rtPhase1Test2(iDays=1, verbose=FALSE)
 bestMorts <- rtMortalityStableSeek(plot=FALSE)
-aspatialResults <- rtPhase1Test3(iDays=1, verbose=FALSE)
+aspatialResults <- rt_runAspatial(iDays=1, verbose=FALSE)
 lNamedArgsAspatial <- NULL #to hold argList for aspatial model  
-gridResults <- rtPhase2Test3(nRow=1,nCol=1,iDays=1,report = NULL)
+gridResults <- rt_runGridTestSpread(nRow=1,nCol=1,iDays=1,report = NULL)
 lNamedArgsGrid <- NULL #to hold argList for grid model  
 
 #shinyServer(function(input, output) {
@@ -203,10 +203,10 @@ output$plotMortalityM <- renderPlot({
                                   verbose=FALSE)
 
        #run the model with the list of args
-       v$aspatialResults <- do.call(rtPhase1Test3, lNamedArgsAspatial)
+       v$aspatialResults <- do.call(rt_runAspatial, lNamedArgsAspatial)
 
       #old way of doing before args were put into a list  
-      #       v$aspatialResults <- rtPhase1Test3(iDays = input$days,
+      #       v$aspatialResults <- rt_runAspatial(iDays = input$days,
       #                                         pMortF = pMortF,
       #                                         pMortM = pMortM, 
       #                                         propMortAdultDD = input$propMortAdultDD,
@@ -256,7 +256,7 @@ output$plotMortalityM <- renderPlot({
     
     #Code to repeat this run of the model locally
     #copied from rtReportPhase2fromShiny
-    sCommand <- "tst <- rtPhase1Test3"
+    sCommand <- "tst <- rt_runAspatial"
     #this creates a vector of 'name=value,'
     vArgs <- paste0(names(lNamedArgsAspatial),"=",lNamedArgsAspatial,", ")
     #to remove the final comma & space in args list
@@ -536,7 +536,7 @@ output$tableNonEdit <- renderTable({
       pMortM <- v$bestMorts$M
       
       #put args into a global list (<<-) so they can also be printed elsewhere
-      #!BEWARE have to make sure that these match the argnames for rtPhase5Test2
+      #!BEWARE have to make sure that these match the argnames for rt_runGrid
       #!otherwise they get missed out when the code string is produced 
       #!and the default values will be used
       lNamedArgsGrid <<- list(
@@ -561,19 +561,19 @@ output$tableNonEdit <- renderTable({
                               #verbose=FALSE)
       
       #run the model with the list of args
-      #v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
+      #v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)
       
       #now I want to change what is run according to checkbox
       #but difficulty that the args for the functions are different
       #as a temporary workaround can use formals to get the arg of a function
       
       if ( input$testSpread )
-        v$gridResults <- do.call(rtPhase2Test3, lNamedArgsGrid)
+        v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)
       else
       {
-        #just use those args that are in the arg list for rtPhase5Test2
+        #just use those args that are in the arg list for rt_runGrid
         #!!BEWARE this is a temporary hack !!
-        lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rtPhase5Test2")))]
+        lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rt_runGrid")))]
         
         #add the matrix containing the vegetation to the arg list 
         lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
@@ -590,9 +590,9 @@ output$tableNonEdit <- renderTable({
         lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) #swapped
         lNamedArgsGrid <<- lNamedArgsGrid
         
-        cat("in runGridModel() calling rtPhase5Test2 with args:",unlist(lNamedArgsGrid))
+        cat("in runGridModel() calling rt_runGrid with args:",unlist(lNamedArgsGrid))
         
-        v$gridResults <- do.call(rtPhase5Test2, lNamedArgsGrid) 
+        v$gridResults <- do.call(rt_runGrid, lNamedArgsGrid) 
         
         #now deparse (conv to text) the first arg (the matrix) for potential pasting by user later
         #!BEWARE deparse has max width.cutoff of 500, if this is exceeded the var gets put
@@ -609,7 +609,7 @@ output$tableNonEdit <- renderTable({
         
       
 #       #old way of doing before args put into a list
-#       v$gridResults <- rtPhase2Test3(nRow = input$nRow,
+#       v$gridResults <- rt_runGridTestSpread(nRow = input$nRow,
 #                                      nCol = input$nCol,
 #                                      pMove = input$pMove,
 #                                      iDays = input$daysGridModel,
@@ -848,12 +848,12 @@ output$printParamsGrid <- renderPrint({
   #different function is run if the test spread checkbox is selected
   if ( input$testSpread )
   {
-    sCommand <- "tst <- rtPhase2Test3"
+    sCommand <- "tst <- rt_runGridTestSpread"
     #this creates a vector of 'name=value,'
     vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")    
   } else
   {
-    sCommand <- "tst <- rtPhase5Test2"
+    sCommand <- "tst <- rt_runGrid"
     
     #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
     #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
