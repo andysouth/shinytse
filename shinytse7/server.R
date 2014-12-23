@@ -46,7 +46,7 @@ shinyServer(function(input, output, session) {
   v$cachedTbl <- NULL    
   
   
-  #vegetation names & mortalities could be read from a file
+  #vegetation names & mortalities are read from a file later
   v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
                               name = c("Dense Forest","Thicket","Open Forest","Savannah","Bush","Grass","No-go area"),
                               mortality = c(100,100,100,100,100,100,999),
