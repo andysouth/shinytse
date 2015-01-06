@@ -522,14 +522,8 @@ output$tableNonEdit <- renderTable({
     
     #isolate reactivity of other objects
     isolate({
-    
-    
+       
     #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
-    
-    #without mention of input$ params in here
-    #this doesn't run even when the Run button is pressed
-    if ( input$daysGridModel > 0 )
-    {
       
       #get mortalities from the stability calculation
       pMortF <- v$bestMorts$F
@@ -606,9 +600,6 @@ output$tableNonEdit <- renderTable({
       }
         
         
-        
-      
-    }
     
     }) #end isolate     
   }) # end runGridModel 
