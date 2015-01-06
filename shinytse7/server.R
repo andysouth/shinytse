@@ -516,8 +516,7 @@ output$tableNonEdit <- renderTable({
     
     cat("in runModel button=",input$aButtonGrid,"\n")
     
-    #changing from a submitButton to an actionButton
-    #add dependency on the button
+    #changed from submitButton to actionButton, add dependency on the button
     if ( input$aButtonGrid == 0 ) return()
     
     #isolate reactivity of other objects
