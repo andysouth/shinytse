@@ -608,27 +608,6 @@ output$tableNonEdit <- renderTable({
         
         
       
-#       #old way of doing before args put into a list
-#       v$gridResults <- rt_runGridTestSpread(nRow = input$nRow,
-#                                      nCol = input$nCol,
-#                                      pMove = input$pMove,
-#                                      iDays = input$daysGridModel,
-#                                      pMortF = pMortF,
-#                                      pMortM = pMortM, 
-#                                      pMortPupa = input$pMortPupa,
-#                                      fStartPopPropCC = input$fStartPopPropCC,
-#                                      iCarryCapF = input$iCarryCapF,
-#                                      #iStartAges = input$iStartAges,
-#                                      #iStartAdults = input$iStartAdults )    
-#                                      propMortAdultDD = input$propMortAdultDD,
-#                                      #iMaxAge = input$iMaxAge,
-#                                      iFirstLarva = input$iFirstLarva,
-#                                      iInterLarva = input$iInterLarva,
-#                                      pMortLarva = input$pMortLarva,        
-#                                      propMortLarvaDD = input$propMortLarvaDD,
-#                                      propMortPupaDD = input$propMortPupaDD )                        
-#                                      #verbose=FALSE)
-      
     }
     
     }) #end isolate     
