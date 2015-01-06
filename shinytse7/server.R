@@ -508,91 +508,120 @@ output$tableNonEdit <- renderTable({
 }) #end of tableNonEdit 
 
 
-## FUNCTIONS used by simple grid tab   ###############################
+## FUNCTIONS used by grid tab   ###############################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  # prerun grid model (sort inputs)  ##########################  
+  prerunGridModel <- reactive({
+      
+      #cat("in prerunGridModel button=",input$aButtonGrid,"\n")
+      
+      #changed from submitButton to actionButton, add dependency on the button
+      if ( input$aButtonGrid == 0 ) return()
+      
+      #isolate reactivity of other objects
+      isolate({
+        
+        #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
+        
+        #get mortalities from the stability calculation
+        pMortF <- v$bestMorts$F
+        pMortM <- v$bestMorts$M
+        
+        #put args into a global list (<<-) so they can also be printed elsewhere
+        #!BEWARE have to make sure that these match the argnames for rt_runGrid
+        #!otherwise they get missed out when the code string is produced 
+        #!and the default values will be used
+        lNamedArgsGrid <<- list(
+          #nRow = input$nRow,
+          #nCol = input$nCol,
+          pMove = input$pMove,
+          iDays = input$daysGridModel,
+          pMortF = pMortF,
+          pMortM = pMortM, 
+          pMortPupa = input$pMortPupa,
+          fStartPopPropCC = input$fStartPopPropCC,
+          iCarryCapF = input$iCarryCapF,
+          #iStartAges = input$iStartAges,
+          #iStartAdults = input$iStartAdults )    
+          propMortAdultDD = input$propMortAdultDD,
+          #iMaxAge = input$iMaxAge,
+          iFirstLarva = input$iFirstLarva,
+          iInterLarva = input$iInterLarva,
+          pMortLarva = input$pMortLarva,        
+          propMortLarvaDD = input$propMortLarvaDD,
+          propMortPupaDD = input$propMortPupaDD )                        
+        #verbose=FALSE)
+        
+        #now I want to change what is run according to checkbox
+        #but difficulty that the args for the functions are different
+        #as a temporary workaround can use formals to get the arg of a function
+        
+        if ( input$testSpread )
+        {
+          v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)          
+        } else
+        {
+          #just use those args that are in the arg list for rt_runGrid
+          #!!BEWARE this is a temporary hack !!
+          lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rt_runGrid")))]
+          
+          #add the matrix containing the vegetation to the arg list 
+          lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
+                             dfMortByVeg=v$dfRasterAtts) 
+          
+          #Shiny reads in the map file to a matrix to display it.
+          #I don't then really want to pass the filename to rtsetse to make it read it in again.
+          #But I do want to put the filename into the code tab, to make the code reproducible 
+          
+          
+          #!BEWARE 
+          #necessary to assign first then globally assign after
+          lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) #swapped
+          lNamedArgsGrid <<- lNamedArgsGrid
+        }
+ 
+      #cat("in prerunGridModel() created arg list, arg1:",unlist(lNamedArgsGrid)[1],"\n")    
+      #cat("in prerunGridModel() created arg list:",unlist(lNamedArgsGrid),"\n")        
+        
+      }) #end isolate     
+    }) # end prerunGridModel 
 
   # RUN grid model  ##########################  
   runGridModel <- reactive({
+  
+    #cat("in runGridModel lNamedArgsGrid=",unlist(lNamedArgsGrid),"\n")
+    #cat("in runGridModel() created arg list, arg1:",unlist(lNamedArgsGrid)[1],"\n")  
     
-    cat("in runModel button=",input$aButtonGrid,"\n")
-    
+    #cat("in runGridModel button=",input$aButtonGrid,"\n")    
     #changed from submitButton to actionButton, add dependency on the button
     if ( input$aButtonGrid == 0 ) return()
-    
+
     #isolate reactivity of other objects
-    isolate({
-       
-    #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
+    isolate({    
+
+      #tryCatch enables modification of the error msg that appears in shiny if memory runs out
+      tryCatch({      
       
-      #get mortalities from the stability calculation
-      pMortF <- v$bestMorts$F
-      pMortM <- v$bestMorts$M
-      
-      #put args into a global list (<<-) so they can also be printed elsewhere
-      #!BEWARE have to make sure that these match the argnames for rt_runGrid
-      #!otherwise they get missed out when the code string is produced 
-      #!and the default values will be used
-      lNamedArgsGrid <<- list(
-                              #nRow = input$nRow,
-                              #nCol = input$nCol,
-                              pMove = input$pMove,
-                              iDays = input$daysGridModel,
-                              pMortF = pMortF,
-                              pMortM = pMortM, 
-                              pMortPupa = input$pMortPupa,
-                              fStartPopPropCC = input$fStartPopPropCC,
-                              iCarryCapF = input$iCarryCapF,
-                              #iStartAges = input$iStartAges,
-                              #iStartAdults = input$iStartAdults )    
-                              propMortAdultDD = input$propMortAdultDD,
-                              #iMaxAge = input$iMaxAge,
-                              iFirstLarva = input$iFirstLarva,
-                              iInterLarva = input$iInterLarva,
-                              pMortLarva = input$pMortLarva,        
-                              propMortLarvaDD = input$propMortLarvaDD,
-                              propMortPupaDD = input$propMortPupaDD )                        
-                              #verbose=FALSE)
-      
-      #run the model with the list of args
-      #v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)
-      
-      #now I want to change what is run according to checkbox
-      #but difficulty that the args for the functions are different
-      #as a temporary workaround can use formals to get the arg of a function
-      
-      if ( input$testSpread )
-        v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)
-      else
-      {
-        #just use those args that are in the arg list for rt_runGrid
-        #!!BEWARE this is a temporary hack !!
-        lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rt_runGrid")))]
+        #to test tryCatch
+        #stop("test error msg")
         
-        #add the matrix containing the vegetation to the arg list 
-        lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
-                           dfMortByVeg=v$dfRasterAtts) 
-        
-        #Shiny reads in the map file to a matrix to display it.
-        #I don't then really want to pass the filename to rtsetse to make it read it in again.
-        #But I do want to put the filename into the code tab, to make the code reproducible 
-     
-        
-        #!BEWARE 
-        #For some reason necessary to assign first then globally assigning after
-        #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
-        lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) #swapped
-        lNamedArgsGrid <<- lNamedArgsGrid
-        
-        cat("in runGridModel() calling rt_runGrid with args:",unlist(lNamedArgsGrid))
-        
-        v$gridResults <- do.call(rt_runGrid, lNamedArgsGrid) 
-        
-        
-      }
-        
-        
+        if ( input$testSpread )
+        {
+          v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)
+        }else
+        {       
+          #cat("in runGridModel() calling rt_runGrid with args:",unlist(lNamedArgsGrid),"\n")
+          
+          v$gridResults <- do.call(rt_runGrid, lNamedArgsGrid)       
+        }     
     
-    }) #end isolate     
+    },error = function(c) {
+                           c$message <- paste0("probably lack of memory, try to rerun locally using code from the code tab.\n",c$message)
+                           stop(c) 
+                           }) #end tryCatch
+
+    }) #end isolate   
   }) # end runGridModel 
   
   
@@ -615,6 +644,7 @@ output$tableNonEdit <- renderTable({
     
     
     #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -647,6 +677,7 @@ output$tableNonEdit <- renderTable({
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
     #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -663,6 +694,7 @@ output$tableNonEdit <- renderTable({
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
     #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -680,6 +712,7 @@ output$tableNonEdit <- renderTable({
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
     #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -698,6 +731,8 @@ output$tableNonEdit <- renderTable({
     #only try to display results after the run button has been pressed for the first time
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
+    #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -760,6 +795,7 @@ output$tableNonEdit <- renderTable({
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
     #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -783,6 +819,7 @@ output$tableNonEdit <- renderTable({
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
     
     #needed to get plot to react when button is pressed
+    prerunGridModel()
     runGridModel()
     
     #with this in a display refresh is triggered when days are changed
@@ -798,7 +835,8 @@ output$printParamsGrid <- renderPrint({
   #only try to display results after the run button has been pressed for the first time
   if ( input$aButtonGrid == 0 ) return( msgRunPrompt(renderType="print") )
   
-  #needed to get plot to react when button is pressed
+  #this may allow correct code to be displayed when model has crashed ..
+  prerunGridModel()
   #runGridModel()
   
   cat("R code to repeat this run of the model locally using rtsetse version",
@@ -877,7 +915,8 @@ output$testInputVals <- renderText({
   if ( input$aButtonGrid == 0 ) return( msgRunPrompt(renderType="text") )
   
   #needed to get plot to react when button is pressed
-  runGridModel()
+  prerunGridModel()
+  #runGridModel()
   
   #browser()
   lNamedArgs <- isolate(reactiveValuesToList(input))   
