@@ -510,7 +510,6 @@ output$tableNonEdit <- renderTable({
 
 ## FUNCTIONS used by simple grid tab   ###############################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#these functions came from shinytse4
 
   # RUN grid model  ##########################  
   runGridModel <- reactive({
