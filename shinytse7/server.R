@@ -587,14 +587,6 @@ output$tableNonEdit <- renderTable({
         
         v$gridResults <- do.call(rt_runGrid, lNamedArgsGrid) 
         
-        #now deparse (conv to text) the first arg (the matrix) for potential pasting by user later
-        #!BEWARE deparse has max width.cutoff of 500, if this is exceeded the var gets put
-        #into multiple elements of a vector and the pasted command doesn't work
-        #default width.cutoff is 60
-#         lArgsToAdd <- list(mVegetation=deparse(as.matrix(v$cachedTbl), width.cutoff=500 ),
-#                            dfMortByVeg=v$dfRasterAtts )
-#         lNamedArgsGrid[1] <- lArgsToAdd
-#         lNamedArgsGrid <<- lNamedArgsGrid
         
       }
         
