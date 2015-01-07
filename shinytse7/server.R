@@ -514,6 +514,9 @@ output$tableNonEdit <- renderTable({
   # prerun grid model (sort inputs)  ##########################  
   prerunGridModel <- reactive({
       
+    #1. create a list of inputs to run model now  
+    #2. create a string to enable user to run model later      
+    
       #cat("in prerunGridModel button=",input$aButtonGrid,"\n")
       
       #changed from submitButton to actionButton, add dependency on the button
@@ -521,6 +524,9 @@ output$tableNonEdit <- renderTable({
       
       #isolate reactivity of other objects
       isolate({
+        
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #1. create a list of inputs to run model now  
         
         #cat("in runGridModel input$daysGridModel=",input$daysGridModel,"\n")
         
@@ -553,15 +559,14 @@ output$tableNonEdit <- renderTable({
           propMortPupaDD = input$propMortPupaDD )                        
         #verbose=FALSE)
         
-        #now I want to change what is run according to checkbox
+        #if testSpread checkbox is selected a different simulation is run
         #but difficulty that the args for the functions are different
-        #as a workaround can use formals to get the arg of a function
+        #as a workaround can use formals to get the args of a function
         
         if ( input$testSpread )
-        {
-          v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)  
-          
-          
+        {       
+          #no need to modify lNamedArgsGrid
+          lArgsToAdd <- NULL #this is just a placeholder
           
         } else
         {
@@ -576,14 +581,51 @@ output$tableNonEdit <- renderTable({
           #Shiny reads in the map file to a matrix to display it.
           #I don't then really want to pass the filename to rtsetse to make it read it in again.
           #But I do want to put the filename into the code tab, to make the code reproducible 
-          
-          
-          #!BEWARE 
-          #necessary to assign first then globally assign after
-          lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) #swapped
+                    
+          #!BEWARE necessary to assign first then globally assign after
+          lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) 
           lNamedArgsGrid <<- lNamedArgsGrid
+          
         }
- 
+      
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      #2. create a string to enable user to run model later
+      if ( input$testSpread )
+      {    
+        sCommand <- "tst <- rt_runGridTestSpread"  
+        
+      } else
+      { 
+        sCommand <- "tst <- rt_runGrid"
+        
+        #I didn't manage to get the matrix into a reproducible string
+        #use the filenames instead
+        if (input$mapLocation == 'Local')
+        {  
+          lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapLocal$name,'"')
+          
+        }
+        else if (input$mapLocation == 'Internal')
+        {
+          #lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapInternal,'"')
+          #TODO this code is repeated from above
+          inFile <- paste0( 'system.file("extdata","',input$fileMapInternal,'", package="rtsetse")')
+          lNamedArgsGrid$mVegetation <- inFile
+        }
+      }
+           
+      
+      #this creates a vector of 'name=value,'
+      vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")   
+      
+      #to remove the final comma & space in args list
+      vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
+      
+      #cat( sCommand,"( ",vArgs," )",sep="")
+      #23/12/14 put this into a global string so I can put it into the run report as well
+      stringCodeRepeat <<- c( sCommand,"( ",vArgs," )")
+      
+        
       #cat("in prerunGridModel() created arg list, arg1:",unlist(lNamedArgsGrid)[1],"\n")    
       #cat("in prerunGridModel() created arg list:",unlist(lNamedArgsGrid),"\n")        
         
@@ -848,55 +890,24 @@ output$printParamsGrid <- renderPrint({
   
   
   #different function is run if the test spread checkbox is selected
-  if ( input$testSpread )
+  #only need to output extra text for the non-spread option
+  if ( !input$testSpread )
   {
-    sCommand <- "tst <- rt_runGridTestSpread"
-
     
-  } else
-  {
-    sCommand <- "tst <- rt_runGrid"
-    
-    #lArgsToAdd <- list(mCarryCapF=deparse(as.matrix(v$cachedTbl)))        
-    #lNamedArgsGrid <- c(lArgsToAdd,lNamedArgsGrid)
-    #hack to add parse to the first argument
-    #lNamedArgsGrid[1] <- paste0("eval(parse(text=\'",lNamedArgsGrid[1],"\'))")
-    
-    #browser()
-    
-    #I didn't manage to get the matrix into a reproducible string
-    #could try to use the filenames instead
     if (input$mapLocation == 'Local')
     {  
-      lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapLocal$name,'"')
       
       cat("As you are using a local vegetation file you will first need to use setwd() ",
           "to set your working directory to the location of the files.",
           "\n\n")  
       
     }
-    else if (input$mapLocation == 'Internal')
-    {
-      #lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapInternal,'"')
-      #TODO this code is repeated from above
-      inFile <- paste0( 'system.file("extdata","',input$fileMapInternal,'", package="rtsetse")')
-      lNamedArgsGrid$mVegetation <- inFile
-    }
+    #else if (input$mapLocation == 'Internal')
         
-
   }
-
-  #this creates a vector of 'name=value,'
-  vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")   
-  
-  #to remove the final comma & space in args list
-  vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
-  
-  #cat( sCommand,"( ",vArgs," )",sep="")
-  #23/12/14 put this into a global string so I can put it into the run report as well
-  stringCodeRepeat <<- c( sCommand,"( ",vArgs," )")
   
   #this outputs it to the code tab
+  #stringCodeRepeat is a global variable
   cat( stringCodeRepeat )
     
   cat( "\n\n#to plot some results \nrtPlotMapPop(tst)" )
