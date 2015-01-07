@@ -643,6 +643,18 @@ output$tableNonEdit <- renderTable({
     #changed from submitButton to actionButton, add dependency on the button
     if ( input$aButtonGrid == 0 ) return()
 
+    #experimenting with progress bar
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #this is the trickier way of doing via the API
+    #because I may be able to pass the object to external functions
+    progress <- shiny::Progress$new(session, min=1, max=15)
+    on.exit(progress$close())   
+    progress$set(message = 'Calculation in progress')#,
+    #             detail = 'This may take a while...')
+    progress$set(value = 15) #setting progress bar to max just to show it's doing something
+    #ideally I might pass the progress object to the rtsetse functions that are taking the time
+    
+    
     #isolate reactivity of other objects
     isolate({    
 
@@ -677,17 +689,17 @@ output$tableNonEdit <- renderTable({
     
     #only try to display results after the run button has been pressed for the first time
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
-    
-    #experimenting with progress bar
-    #this is the trickier way of doing via the API
-    #because I may be able to pass the object to external functions
-    progress <- shiny::Progress$new(session, min=1, max=15)
-    on.exit(progress$close())   
-    progress$set(message = 'Calculation in progress')#,
-    #             detail = 'This may take a while...')
-    progress$set(value = 15) #setting progress bar to max just to show it's doing something
-    #ideally I might pass the progress object to the rtsetse functions that are taking the time
-    
+
+# moved to runGridModel()    
+#     #experimenting with progress bar
+#     #this is the trickier way of doing via the API
+#     #because I may be able to pass the object to external functions
+#     progress <- shiny::Progress$new(session, min=1, max=15)
+#     on.exit(progress$close())   
+#     progress$set(message = 'Calculation in progress')#,
+#     #             detail = 'This may take a while...')
+#     progress$set(value = 15) #setting progress bar to max just to show it's doing something
+#     #ideally I might pass the progress object to the rtsetse functions that are taking the time    
     
     #needed to get plot to react when button is pressed
     prerunGridModel()
