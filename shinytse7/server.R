@@ -559,11 +559,14 @@ output$tableNonEdit <- renderTable({
         
         if ( input$testSpread )
         {
-          v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)          
+          v$gridResults <- do.call(rt_runGridTestSpread, lNamedArgsGrid)  
+          
+          
+          
         } else
         {
           #just use those args that are in the arg list for rt_runGrid
-          #!!BEWARE this is a temporary hack !!
+          #!!BEWARE this is a hack !!
           lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rt_runGrid")))]
           
           #add the matrix containing the vegetation to the arg list 
@@ -848,8 +851,8 @@ output$printParamsGrid <- renderPrint({
   if ( input$testSpread )
   {
     sCommand <- "tst <- rt_runGridTestSpread"
-    #this creates a vector of 'name=value,'
-    vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")    
+
+    
   } else
   {
     sCommand <- "tst <- rt_runGrid"
@@ -880,11 +883,12 @@ output$printParamsGrid <- renderPrint({
       lNamedArgsGrid$mVegetation <- inFile
     }
         
-    #this creates a vector of 'name=value,'
-    vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ") 
 
   }
 
+  #this creates a vector of 'name=value,'
+  vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ")   
+  
   #to remove the final comma & space in args list
   vArgs[length(vArgs)] <- substr(vArgs[length(vArgs)],0,nchar(vArgs[length(vArgs)])-2)
   
