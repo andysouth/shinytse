@@ -41,12 +41,11 @@ shinyServer(function(input, output, session) {
                        cachedTbl = NULL, 
                        dfRasterAtts = NULL) 
   
-  #load an example veg map to start
-  #inFile <- "vegUgandaSETorr1km.txt"
-  #v$cachedTbl <- read.table(inFile, as.is=TRUE)  
-  #1/12/14 do I need the above ? can I set it to NULL to start
-  v$cachedTbl <- NULL    
-  
+  #v$cachedTbl <- NULL   
+  #load an example veg map to start, so that sim can be run without
+  #having to load a map in the map tab first
+  inFile <- system.file("extdata","veg_Example2x3.txt", package="rtsetse")
+  v$cachedTbl <- read.table(inFile, as.is=TRUE) 
   
   #vegetation names & mortalities are read from a file later
   v$dfRasterAtts <- data.frame( code = c("D","T","O","S","B","G","N"), 
@@ -525,6 +524,10 @@ output$tableNonEdit <- renderTable({
       
       #isolate reactivity of other objects
       isolate({
+        
+        #to check if no map has been loaded
+        #now I load a map by default, but still good to have this check
+        if ( is.null(v$cachedTbl) ) stop("no vegetation map loaded, please go to the 'load map' tab first")
         
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         #1. create a list of inputs to run model now  
