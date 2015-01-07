@@ -555,7 +555,7 @@ output$tableNonEdit <- renderTable({
         
         #now I want to change what is run according to checkbox
         #but difficulty that the args for the functions are different
-        #as a temporary workaround can use formals to get the arg of a function
+        #as a workaround can use formals to get the arg of a function
         
         if ( input$testSpread )
         {
@@ -879,19 +879,9 @@ output$printParamsGrid <- renderPrint({
       inFile <- paste0( 'system.file("extdata","',input$fileMapInternal,'", package="rtsetse")')
       lNamedArgsGrid$mVegetation <- inFile
     }
-
-    #dfMortByVeg= )    
-    
-    
+        
     #this creates a vector of 'name=value,'
     vArgs <- paste0(names(lNamedArgsGrid),"=",lNamedArgsGrid,", ") 
-    #when functions start using map files
-    #it's less easy to make the code reproducible
-    #use dput() to pass a copy of the matrix from a file
-    #ugly but functional
-    #toAdd <- paste0("mCarryCapF=",dput(v$cachedTbl))
-    #vArgs <- paste0(toAdd, ",", vArgs)  
-
 
   }
 
@@ -901,6 +891,7 @@ output$printParamsGrid <- renderPrint({
   #cat( sCommand,"( ",vArgs," )",sep="")
   #23/12/14 put this into a global string so I can put it into the run report as well
   stringCodeRepeat <<- c( sCommand,"( ",vArgs," )")
+  
   #this outputs it to the code tab
   cat( stringCodeRepeat )
     
