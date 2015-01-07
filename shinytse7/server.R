@@ -7,6 +7,7 @@
 #runApp('shinytse7')
 #for me to deploy online
 #devtools::install_github('AndySouth/rtsetse')
+#devtools::install_github("rstudio/shinyapps")
 #library(shinyapps)
 #deployApp('shinytse7')
 
