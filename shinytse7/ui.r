@@ -15,21 +15,28 @@
 library(shiny)
 library(markdown)
 library(shinyTable) #for htable editable tables
-
+library(shinythemes) #for new themes
 
 # Define UI 
-shinyUI(fluidPage(
-  
+#shinyUI(fluidPage(
+#shinyUI(fluidPage(theme = shinytheme("cerulean"),  #fine, light blue header, buttons white
+#shinyUI(fluidPage(theme = shinytheme("cosmo"), #ugly black header, black buttons
+#shinyUI(fluidPage(theme = shinytheme("flatly"), #close to before, dk blue header, buttons medium grey
+#shinyUI(fluidPage(theme = shinytheme("journal"), #ugly font
+#shinyUI(fluidPage(theme = shinytheme("readable"), #ok, white background, blue text
+#shinyUI(fluidPage(theme = shinytheme("spacelab"), #nice, greay header, buttons nr black
+shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey buttons, good for a temporary change !
+
   #this didn't work to put text above the navbar
   #helpText("Test..."),
   
   #navbarPage sets up navbar, title appears on left
-  #navbarPage("rtsetse demonstrator",
+  navbarPage("rtsetse demonstrator",
   #trying a theme, must be compatible with Bootstrap 2.3.2 
   #from http://bootswatch.com/2/ saved in www/ folder
   #this theme is flatly - blue navbar & turquoise links !
-  navbarPage("rtsetse demonstrator", theme = "bootstrap.min.css",
-    
+  #navbarPage("rtsetse demonstrator", theme = "bootstrap.min.css",
+             
     # tab "About" ---------------------------
     tabPanel("About", includeMarkdown("about.md")),
     
