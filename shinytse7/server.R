@@ -585,7 +585,19 @@ output$tableNonEdit <- renderTable({
           #Shiny reads in the map file to a matrix to display it.
           #I don't then really want to pass the filename to rtsetse to make it read it in again.
           #But I do want to put the filename into the code tab, to make the code reproducible 
-                    
+          
+          #if in control tab, add control arguments
+          #if ( input$selectedTab == "control")
+          if ( input$selectedTab == "grid")
+          {
+            cat("in control tab\n")  
+            lControlArgs <- list(pControl=input$pControl,
+                                 iControlBorder=input$iControlBorder)
+            
+            lArgsToAdd <- c(lArgsToAdd,lControlArgs)            
+          }
+
+          
           #!BEWARE necessary to assign first then globally assign after
           lNamedArgsGrid <- c(lNamedArgsGrid,lArgsToAdd) 
           lNamedArgsGrid <<- lNamedArgsGrid

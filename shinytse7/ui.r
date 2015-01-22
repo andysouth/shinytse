@@ -31,7 +31,7 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
   #helpText("Test..."),
   
   #navbarPage sets up navbar, title appears on left
-  navbarPage("rtsetse demonstrator",
+  navbarPage("rtsetse demonstrator", id="selectedTab",
   #trying a theme, must be compatible with Bootstrap 2.3.2 
   #from http://bootswatch.com/2/ saved in www/ folder
   #this theme is flatly - blue navbar & turquoise links !
@@ -42,7 +42,7 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
     
              
     # tab "seek stable mortality" ---------------------------
-    tabPanel("1 seek stable mortality", 
+    tabPanel("1 seek stable mortality", value="seek",
       
       helpText("Set population parameters on the left and press the seek button to find",
                " values of adult mortality that generate a stable population."),
@@ -176,7 +176,7 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
     ), # end tabPanel("seeking stable mortality")
     
     # tab "a-spatial model" ---------------------------
-    tabPanel("2 aspatial model",
+    tabPanel("2 aspatial model", value="aspatial",
              
       helpText("Runs a model for a single population.",
                " Select parameter values on the left, press run, then view different outputs on the right.",
@@ -263,7 +263,7 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
      
      # tab load grid ---------------------------           
      #tabPanel("3.1 load grid",
-     tabPanel("3 load map",
+     tabPanel("3 load map", value="map",
               
       helpText("Allows loading of a text file containing a grid of vegetation categories",
                " be used in the simulation. You can choose from internally saved files",
@@ -345,9 +345,9 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
      ), # end tabPanel("load grid")               
      
      # tab run grid model ---------------------------                      
-     tabPanel("4 run grid model",
+     tabPanel("4 run grid model", value="grid",
              
-     helpText("Runs a simple gridded model with a starting population defined by the carrying capacities in the loaded grid.",
+     helpText("Runs a gridded model with a starting population defined by the carrying capacities in the loaded grid.",
               " If you tick 'Test spread' popn is started from single central cell on a uniform grid.",
               " Uses parameters from previous pages to run the aspatial model in each cell and move flies between cells.",
               " Select parameter values on the left, press run, then view different outputs on the right.",
@@ -422,7 +422,7 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
            #tabPanel("temporary", helpText("temporarily disabled while we work out how best to do this")) 
         
            # viewing outputs -----------------          
-           tabPanel("Maps daily", plotOutput("plotMapDays")),
+           #tabPanel("Maps daily", plotOutput("plotMapDays")),
            tabPanel("Map final", plotOutput("plotMapFinalDay")),           
            tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
            tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
@@ -436,16 +436,53 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
            
            ) # end tabsetPanel                 
          ) # end mainPanel         
-       ) # end pageWithSidebar  
+       ) # end sidebarLayout  
     ), # end tabPanel("spatial model") 
     #), # end navbarMenu("3 spatial model",
 
     # tab "control" ---------------------------
-    tabPanel("5 control",
+    tabPanel("5 control", value="control",
              
-             helpText("Not yet implemented.",
-                      " Will allow different control measures to be simulated ITC, AB and SAT."
-                      )
+#              helpText("Not yet implemented.",
+#                       " Will allow different control measures to be simulated ITC, AB and SAT."
+#                       )
+             helpText("Applies control by artificial baits to the gridded model specified by the previous tabs.",
+                      " (Under development)."
+             ),
+
+      sidebarLayout(      
+        sidebarPanel(
+#            
+          actionButton('aButtonGrid',"Run Model"), 
+#           
+          sliderInput("pControl", 
+                      "1 proportion killed by control:", 
+                      min = 0,
+                      max = 0.5,
+                      step = 0.05,
+                      value = 0.1),
+          
+          sliderInput("iControlBorder", 
+                      "2 border width not controlled:", 
+                      min = 1,
+                      max = 20, 
+                      value = 8)
+          
+      ), #end sidebarPanel
+
+      # mainPanel
+      mainPanel(
+        
+        tabsetPanel(
+                    
+#           # viewing outputs -----------------          
+            tabPanel("Maps daily", plotOutput("plotMapDays")),         
+#           tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
+            tabPanel("About", includeMarkdown("about.md"))
+    
+          ) # end tabsetPanel                 
+        ) # end mainPanel         
+      ) # end sidebarLayout  
     ) # end tabPanel("control") 
   ) # end navbarPage  
 ) # end fluidPage
