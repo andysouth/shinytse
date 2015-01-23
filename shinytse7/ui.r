@@ -422,7 +422,7 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
            #tabPanel("temporary", helpText("temporarily disabled while we work out how best to do this")) 
         
            # viewing outputs -----------------          
-           #tabPanel("Maps daily", plotOutput("plotMapDays")),
+           tabPanel("Maps daily", plotOutput("plotMapDays")),
            tabPanel("Map final", plotOutput("plotMapFinalDay")),           
            tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
            tabPanel("Age structure", plotOutput("plotAgeStructGrid")),
@@ -453,20 +453,21 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
       sidebarLayout(      
         sidebarPanel(
 #            
-          actionButton('aButtonGrid',"Run Model"), 
+          actionButton('aButtonControl',"Run Model"), 
 #           
-          sliderInput("pControl", 
+          #sliderInput("pControl", 
+          numericInput("pControl", 
                       "1 proportion killed by control:", 
                       min = 0,
                       max = 0.5,
                       step = 0.05,
                       value = 0.1),
           
-          sliderInput("iControlBorder", 
+          numericInput("iControlBorder", 
                       "2 border width not controlled:", 
                       min = 1,
                       max = 20, 
-                      value = 8)
+                      value = 1)
           
       ), #end sidebarPanel
 
@@ -476,9 +477,10 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
         tabsetPanel(
                     
 #           # viewing outputs -----------------          
-            tabPanel("Maps daily", plotOutput("plotMapDays")),         
-#           tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
-            tabPanel("About", includeMarkdown("about.md"))
+            tabPanel("Maps daily", plotOutput("plotMapDaysControl"))         
+            #to include a code tab I'll probably need to copy & rename "printParamsGrid" in server
+            #tabPanel("Code", verbatimTextOutput("printParamsGrid")) 
+            #tabPanel("About", includeMarkdown("about.md"))
     
           ) # end tabsetPanel                 
         ) # end mainPanel         

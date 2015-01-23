@@ -520,7 +520,12 @@ output$tableNonEdit <- renderTable({
       #cat("in prerunGridModel button=",input$aButtonGrid,"\n")
       
       #changed from submitButton to actionButton, add dependency on the button
-      if ( input$aButtonGrid == 0 ) return()
+      #if ( input$aButtonGrid == 0 ) return()
+      #23/1/15 above stopped running control before grid & caused invalid argument to unary operator
+      #it may be useful later for now make dependency simpler
+      input$aButtonGrid
+      #23/1/15 adding dependency on new control button
+      input$aButtonControl
       
       #isolate reactivity of other objects
       isolate({
@@ -587,8 +592,8 @@ output$tableNonEdit <- renderTable({
           #But I do want to put the filename into the code tab, to make the code reproducible 
           
           #if in control tab, add control arguments
-          #if ( input$selectedTab == "control")
-          if ( input$selectedTab == "grid")
+          if ( input$selectedTab == "control")
+          #if ( input$selectedTab == "grid")
           {
             cat("in control tab\n")  
             lControlArgs <- list(pControl=input$pControl,
@@ -656,8 +661,14 @@ output$tableNonEdit <- renderTable({
     
     #cat("in runGridModel button=",input$aButtonGrid,"\n")    
     #changed from submitButton to actionButton, add dependency on the button
-    if ( input$aButtonGrid == 0 ) return()
-
+    #if ( input$aButtonGrid == 0 ) return()
+    #23/1/15 above stopped running control before grid & caused invalid argument to unary operator
+    #it may be useful later for now make dependency simpler
+    input$aButtonGrid
+    
+    #23/1/15 adding dependency on new control button
+    input$aButtonControl
+    
     #experimenting with progress bar
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     #this is the trickier way of doing via the API
@@ -704,17 +715,6 @@ output$tableNonEdit <- renderTable({
     
     #only try to display results after the run button has been pressed for the first time
     if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
-
-# moved to runGridModel()    
-#     #experimenting with progress bar
-#     #this is the trickier way of doing via the API
-#     #because I may be able to pass the object to external functions
-#     progress <- shiny::Progress$new(session, min=1, max=15)
-#     on.exit(progress$close())   
-#     progress$set(message = 'Calculation in progress')#,
-#     #             detail = 'This may take a while...')
-#     progress$set(value = 15) #setting progress bar to max just to show it's doing something
-#     #ideally I might pass the progress object to the rtsetse functions that are taking the time    
     
     #needed to get plot to react when button is pressed
     prerunGridModel()
@@ -725,7 +725,24 @@ output$tableNonEdit <- renderTable({
     
     rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='MF')
   })  
+
+# plotting controlled pop maps for MF ###############################
+# currently identical to plotMapDays except checks aButtonControl
+output$plotMapDaysControl <- renderPlot({
   
+  #only try to display results after the run button has been pressed for the first time
+  if ( input$aButtonControl == 0 ) return( msgRunPrompt() )
+  
+  #needed to get plot to react when button is pressed
+  prerunGridModel()
+  runGridModel()
+  
+  #with this in a display refresh is triggered when days are changed
+  #cat("in plotMapDays input$daysGridModel=",input$daysGridModel,"\n")
+  
+  rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='MF')
+})  
+
   # message to prompt user to press run --------------
   #options for renderType are 'plot' 'print' and 'text'
   msgRunPrompt <- function( renderType="plot", ... )
@@ -758,8 +775,8 @@ output$tableNonEdit <- renderTable({
     
     rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='F')
   })  
-  
-  
+
+
   # plot pop map for final day ###############################
   output$plotMapFinalDay <- renderPlot({
     
