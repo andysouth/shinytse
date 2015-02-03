@@ -7,6 +7,12 @@ rtsetse is modular in construction to allow the creation of different models and
 
 see https://github.com/AndySouth/rtsetse
 
+To run the current user interface locally :
+
+  require(devtools)
+  install_github('AndySouth/rtsetse')
+  shiny::runGitHub('AndySouth/shinytse', subdir='shinytse7')
+
 These are the current main user interfaces.
 
 Shiny app name  | What it does  | To access on web
