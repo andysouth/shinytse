@@ -584,7 +584,7 @@ output$tableNonEdit <- renderTable({
           lNamedArgsGrid <- lNamedArgsGrid[ which(names(lNamedArgsGrid) %in% names(formals("rt_runGrid")))]
           
           #add the matrix containing the vegetation to the arg list 
-          lArgsToAdd <- list(mVegetation=as.matrix(v$cachedTbl),
+          lArgsToAdd <- list(mVegCats=as.matrix(v$cachedTbl),
                              dfMortByVeg=v$dfRasterAtts) 
           
           #Shiny reads in the map file to a matrix to display it.
@@ -623,7 +623,7 @@ output$tableNonEdit <- renderTable({
         #use the filenames instead
         if (input$mapLocation == 'Local')
         {  
-          lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapLocal$name,'"')
+          lNamedArgsGrid$mVegCats <- paste0('"',input$fileMapLocal$name,'"')
           
         }
         else if (input$mapLocation == 'Internal')
@@ -631,7 +631,7 @@ output$tableNonEdit <- renderTable({
           #lNamedArgsGrid$mVegetation <- paste0('"',input$fileMapInternal,'"')
           #TODO this code is repeated from above
           inFile <- paste0( 'system.file("extdata","',input$fileMapInternal,'", package="rtsetse")')
-          lNamedArgsGrid$mVegetation <- inFile
+          lNamedArgsGrid$mVegCats <- inFile
         }
       }
            
