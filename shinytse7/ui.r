@@ -11,6 +11,9 @@
 #library(shinyapps)
 #deployApp('shinytse7')
 
+if (!require("devtools")) install.packages("devtools")
+library(devtools)
+if (!require("shinyTable")) install_github("shinyTable", "trestletech")
 
 library(shiny)
 library(markdown)
