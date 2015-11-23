@@ -28,9 +28,9 @@ gridResults <- rt_runGridTestSpread(nRow=1,nCol=1,iDays=1,report = NULL)
 lNamedArgsGrid <- NULL #to hold argList for grid model  
 stringCodeRepeat <- NULL # to hold the actual function call for the grid model, e.g. with filename for the veg matrix
 
-#shinyServer(function(input, output) {
+shinyServer(function(input, output) {
 #10/10/14 adding session arg for progress bar experiments
-shinyServer(function(input, output, session) {
+#shinyServer(function(input, output, session) {
   
   #I only want to run model when a button is pressed
   
@@ -673,7 +673,7 @@ output$tableNonEdit <- renderTable({
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     #this is the trickier way of doing via the API
     #because I may be able to pass the object to external functions
-    progress <- shiny::Progress$new(session, min=1, max=15)
+    progress <- shiny::Progress$new(min=1, max=15)
     on.exit(progress$close())   
     progress$set(message = 'Calculation in progress')#,
     #             detail = 'This may take a while...')
