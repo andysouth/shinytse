@@ -406,13 +406,20 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
                      min = 1,
                      max = 100, 
                      value = 4),
+
+         sliderInput("pMoveF", 
+                      "2 proportion F moving:", 
+                      min = 0,
+                      max = 1,
+                      step = 0.05,
+                      value = 0.6),
          
-         sliderInput("pMove", 
-                     "2 proportion moving:", 
+         sliderInput("pMoveM", 
+                     "3 proportion M moving:", 
                      min = 0,
                      max = 1,
                      step = 0.05,
-                     value = 0.4)
+                     value = 0.3)
          
        ), #end sidebarPanel
        
@@ -426,6 +433,8 @@ shinyUI(fluidPage(theme = shinytheme("united"), #nice orange/red header, grey bu
         
            # viewing outputs -----------------          
            tabPanel("Maps daily", plotOutput("plotMapDays")),
+           tabPanel("Maps F", plotOutput("plotMapDaysF")),
+           tabPanel("Maps M", plotOutput("plotMapDaysM")),
            tabPanel("Map final", plotOutput("plotMapFinalDay")),           
            tabPanel("Popn whole grid", plotOutput("plotPopGrid")),
            tabPanel("Age structure", plotOutput("plotAgeStructGrid")),

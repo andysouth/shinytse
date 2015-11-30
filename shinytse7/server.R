@@ -550,7 +550,8 @@ output$tableNonEdit <- renderTable({
         lNamedArgsGrid <<- list(
           #nRow = input$nRow,
           #nCol = input$nCol,
-          pMove = input$pMove,
+          pMoveF = input$pMoveF,
+          pMoveM = input$pMoveM,
           iDays = input$daysGridModel,
           pMortF = pMortF,
           pMortM = pMortM, 
@@ -760,7 +761,6 @@ output$plotMapDaysControl <- renderPlot({
 
 
   # plotting pop maps for F ###############################
-  # (not used currently)
   output$plotMapDaysF <- renderPlot({
     
     #only try to display results after the run button has been pressed for the first time
@@ -770,13 +770,23 @@ output$plotMapDaysControl <- renderPlot({
     prerunGridModel()
     runGridModel()
     
-    #with this in a display refresh is triggered when days are changed
-    #cat("in plotMapDaysF input$daysGridModel=",input$daysGridModel,"\n")
-    
     rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='F')
   })  
 
-
+  # plotting pop maps for M ###############################
+  output$plotMapDaysM <- renderPlot({
+    
+    #only try to display results after the run button has been pressed for the first time
+    if ( input$aButtonGrid == 0 ) return( msgRunPrompt() )
+    
+    #needed to get plot to react when button is pressed
+    prerunGridModel()
+    runGridModel()
+    
+    rtPlotMapPop(v$gridResults, days='all', ifManyDays = 'spread', sex='M')
+  }) 
+  
+  
   # plot pop map for final day ###############################
   output$plotMapFinalDay <- renderPlot({
     
